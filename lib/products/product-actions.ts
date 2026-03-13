@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { products } from "@/db/schema";
+import { products, votes } from "@/db/schema";
 import { FormState } from "@/types";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { productSchema } from "./product-validations";
@@ -94,52 +94,77 @@ export const addProductAction = async (
 	}
 };
 
+// ---------------- CHECK VOTE ----------------
+export const hasUserVoted = async (userId: string, productId: number) => {
+	const existing = await db
+		.select()
+		.from(votes)
+		.where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
+
+	return !!existing;
+};
+
+// ---------------- UPVOTE ----------------
 export const upvoteProductAction = async (productId: number) => {
 	try {
 		const { userId } = await auth();
-
 		if (!userId) {
-			console.log("User not signed in");
-			return {
-				success: false,
-				message: "You must be signed in to upvote a product",
-			};
+			return { success: false, message: "Not authenticated" };
 		}
+
+		const existing = await db
+			.select()
+			.from(votes)
+			.where(
+				and(eq(votes.userId, userId), eq(votes.productId, productId)),
+			);
+
+		if (existing.length > 0) {
+			return { success: false, message: "Already voted" };
+		}
+
+		await db.insert(votes).values({
+			userId,
+			productId,
+		});
 
 		await db
 			.update(products)
 			.set({
-				voteCount: sql`GREATEST(0, vote_count + 1)`,
+				voteCount: sql`vote_count + 1`,
 			})
 			.where(eq(products.id, productId));
 
 		revalidatePath("/");
+		revalidatePath("/explore");
 
-		return {
-			success: true,
-			message: "Product upvoted successfully",
-		};
+		return { success: true };
 	} catch (error) {
 		console.error(error);
-		return {
-			success: false,
-			message: "Failed to upvote product",
-			voteCount: 0,
-		};
+		return { success: false };
 	}
 };
 
+// ---------------- DOWNVOTE ----------------
 export const downvoteProductAction = async (productId: number) => {
 	try {
 		const { userId } = await auth();
-
 		if (!userId) {
-			console.log("User not signed in");
-			return {
-				success: false,
-				message: "You must be signed in to downvote a product",
-			};
+			return { success: false };
 		}
+
+		const existing = await db
+			.select()
+			.from(votes)
+			.where(
+				and(eq(votes.userId, userId), eq(votes.productId, productId)),
+			);
+
+		if (existing.length === 0) {
+			return { success: false, message: "Not voted yet" };
+		}
+
+		await db.delete(votes).where(eq(votes.id, existing[0].id));
 
 		await db
 			.update(products)
@@ -149,17 +174,11 @@ export const downvoteProductAction = async (productId: number) => {
 			.where(eq(products.id, productId));
 
 		revalidatePath("/");
+		revalidatePath("/explore");
 
-		return {
-			success: true,
-			message: "Product down voted successfully",
-		};
+		return { success: true };
 	} catch (error) {
 		console.error(error);
-		return {
-			success: false,
-			message: "Failed to downvote product",
-			voteCount: 0,
-		};
+		return { success: false };
 	}
 };
