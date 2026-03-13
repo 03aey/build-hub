@@ -15,6 +15,13 @@
       "when": 1772934672989,
       "tag": "0001_slimy_payback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775192436705,
+      "tag": "0002_aberrant_daredevil",
+      "breakpoints": true
     }
   ]
 }

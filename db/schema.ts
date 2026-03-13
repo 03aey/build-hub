@@ -10,6 +10,7 @@ import {
 	index,
 } from "drizzle-orm/pg-core";
 
+// ---------------- PRODUCTS ----------------
 export const products = pgTable(
 	"products",
 	{
@@ -29,7 +30,7 @@ export const products = pgTable(
 		approvedAt: timestamp("approved_at", { withTimezone: true }),
 		status: varchar("status", { length: 20 }).default("pending"),
 		submittedBy: varchar("submitted_by", { length: 120 }).default(
-			"anonymous"
+			"anonymous",
 		),
 		userId: varchar("user_id", { length: 255 }),
 
@@ -39,11 +40,12 @@ export const products = pgTable(
 		slugIdx: uniqueIndex("products_slug_idx").on(table.slug),
 		statusIdx: index("products_status_idx").on(table.status),
 		organizationIdx: index("products_organization_idx").on(
-			table.organizationId
+			table.organizationId,
 		),
-	})
+	}),
 );
 
+// ---------------- CONTACT SUBMISSIONS ----------------
 export const contactSubmissions = pgTable(
 	"contact_submissions",
 	{
@@ -60,5 +62,28 @@ export const contactSubmissions = pgTable(
 	(table) => ({
 		statusIdx: index("contact_submissions_status_idx").on(table.status),
 		emailIdx: index("contact_submissions_email_idx").on(table.email),
-	})
+	}),
+);
+
+// ---------------- VOTES ----------------
+export const votes = pgTable(
+	"votes",
+	{
+		id: serial("id").primaryKey(),
+		userId: varchar("user_id", { length: 255 }).notNull(),
+		productId: integer("product_id")
+			.notNull()
+			.references(() => products.id),
+
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+	},
+	(table) => ({
+		// 🚀 prevents duplicate voting
+		userProductIdx: uniqueIndex("votes_user_product_idx").on(
+			table.userId,
+			table.productId,
+		),
+		userIdx: index("votes_user_idx").on(table.userId),
+		productIdx: index("votes_product_idx").on(table.productId),
+	}),
 );

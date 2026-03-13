@@ -171,7 +171,7 @@ export const allProducts = [
 		tagline: "Harmony Hub is a cutting-edge music academy app",
 		description:
 			"Harmony Hub is a cutting-edge music academy app built with Next.js. It transforms music education by providing an intuitive platform for students, teachers, and administrators. With features for interactive lessons, performance tracking, and streamlined administration, Harmony Hub enhances the learning experience and simplifies school management.",
-		websiteUrl: "https://recipewiz.vercel.app",
+		websiteUrl: "https://harmony-hub-alok.vercel.app",
 		tags: [
 			"Music",
 			"Academy",

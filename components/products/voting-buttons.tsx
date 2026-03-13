@@ -11,30 +11,34 @@ import { Button } from "@/components/ui/button";
 
 export default function VotingButtons({
 	hasVoted,
-	voteCount: initialVoteCount,
+	voteCount,
 	productId,
 }: {
-	hasVoted?: boolean;
+	hasVoted: boolean;
 	voteCount: number;
 	productId: number;
 }) {
-	const [optimisticVoteCount, setOptimisticVoteCount] = useOptimistic(
-		initialVoteCount,
-		(currentCount, change: number) => Math.max(0, currentCount + change),
+	const [optimisticVotes, setOptimisticVotes] = useOptimistic(
+		voteCount,
+		(state, change: number) => Math.max(0, state + change),
 	);
 
 	const [isPending, startTransition] = useTransition();
 
-	const handleUpvote = async () => {
+	const handleUpvote = () => {
+		if (hasVoted) return;
+
 		startTransition(async () => {
-			setOptimisticVoteCount(1);
+			setOptimisticVotes(1);
 			await upvoteProductAction(productId);
 		});
 	};
 
-	const handleDownvote = async () => {
+	const handleDownvote = () => {
+		if (!hasVoted) return;
+
 		startTransition(async () => {
-			setOptimisticVoteCount(-1);
+			setOptimisticVotes(-1);
 			await downvoteProductAction(productId);
 		});
 	};
@@ -52,17 +56,17 @@ export default function VotingButtons({
 				variant="ghost"
 				size="icon-sm"
 				className={cn(
-					"h-8 w-8 text-primary ",
+					"h-8 w-8 text-primary disabled:cursor-default",
 					hasVoted
-						? "bg-primary/10 text-primary hover:bg-primary/20"
-						: "hover:bg-primary/10 hover:text-primary",
+						? "bg-primary/20 text-primary cursor-default hover:bg-primary/20 hover:text-primary"
+						: "hover:bg-primary/10 hover:text-primary cursor-pointer",
 				)}
 				disabled={isPending}
 			>
 				<ChevronUpIcon className="size-5" />
 			</Button>
 			<span className="text-sm font-semibold transition-colors text-foreground">
-				{optimisticVoteCount}
+				{optimisticVotes}
 			</span>
 			<Button
 				onClick={handleDownvote}
@@ -70,10 +74,10 @@ export default function VotingButtons({
 				size="icon-sm"
 				disabled={isPending}
 				className={cn(
-					"h-8 w-8 text-primary ",
-					hasVoted
-						? "hover:text-destructive"
-						: "opacity-50 cursor-not-allowed",
+					"h-8 w-8 text-primary",
+					!hasVoted
+						? "cursor-default hover:bg-transparent hover:text-primary"
+						: "hover:text-primary hover:bg-primary/10",
 				)}
 			>
 				<ChevronDownIcon className="size-5" />
