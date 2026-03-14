@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { products, votes } from "@/db/schema";
+import { products } from "@/db/schema";
 import { FormState } from "@/types";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { and, eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { productSchema } from "./product-validations";
@@ -94,16 +94,6 @@ export const addProductAction = async (
 	}
 };
 
-// ---------------- CHECK VOTE ----------------
-export const hasUserVoted = async (userId: string, productId: number) => {
-	const existing = await db
-		.select()
-		.from(votes)
-		.where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
-
-	return !!existing;
-};
-
 // ---------------- UPVOTE ----------------
 export const upvoteProductAction = async (productId: number) => {
 	try {
@@ -114,24 +104,27 @@ export const upvoteProductAction = async (productId: number) => {
 
 		const existing = await db
 			.select()
-			.from(votes)
-			.where(
-				and(eq(votes.userId, userId), eq(votes.productId, productId)),
-			);
+			.from(products)
+			.where(eq(products.id, productId))
+			.limit(1);
 
-		if (existing.length > 0) {
-			return { success: false, message: "Already voted" };
+		const product = existing[0];
+
+		if (!product) {
+			return { success: false, message: "Product not found" };
 		}
 
-		await db.insert(votes).values({
-			userId,
-			productId,
-		});
+		const votedBy = product.votedBy ?? [];
+
+		if (votedBy.includes(userId)) {
+			return { success: false, message: "Already voted" };
+		}
 
 		await db
 			.update(products)
 			.set({
-				voteCount: sql`vote_count + 1`,
+				votedBy: [...votedBy, userId],
+				voteCount: product.voteCount + 1,
 			})
 			.where(eq(products.id, productId));
 
@@ -150,26 +143,32 @@ export const downvoteProductAction = async (productId: number) => {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return { success: false };
+			return { success: false, message: "Not authenticated" };
 		}
 
 		const existing = await db
 			.select()
-			.from(votes)
-			.where(
-				and(eq(votes.userId, userId), eq(votes.productId, productId)),
-			);
+			.from(products)
+			.where(eq(products.id, productId))
+			.limit(1);
 
-		if (existing.length === 0) {
-			return { success: false, message: "Not voted yet" };
+		const product = existing[0];
+
+		if (!product) {
+			return { success: false, message: "Product not found" };
 		}
 
-		await db.delete(votes).where(eq(votes.id, existing[0].id));
+		const votedBy = product.votedBy ?? [];
+
+		if (!votedBy.includes(userId)) {
+			return { success: false, message: "Not voted yet" };
+		}
 
 		await db
 			.update(products)
 			.set({
-				voteCount: sql`GREATEST(0, vote_count - 1)`,
+				votedBy: votedBy.filter((id) => id !== userId),
+				voteCount: Math.max(0, product.voteCount - 1),
 			})
 			.where(eq(products.id, productId));
 
