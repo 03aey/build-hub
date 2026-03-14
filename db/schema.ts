@@ -25,6 +25,7 @@ export const products = pgTable(
 		tags: json("tags").$type<string[]>(),
 
 		voteCount: integer("vote_count").notNull().default(0),
+		votedBy: json("voted_by").$type<string[]>().default([]),
 
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 		approvedAt: timestamp("approved_at", { withTimezone: true }),
@@ -62,28 +63,5 @@ export const contactSubmissions = pgTable(
 	(table) => ({
 		statusIdx: index("contact_submissions_status_idx").on(table.status),
 		emailIdx: index("contact_submissions_email_idx").on(table.email),
-	}),
-);
-
-// ---------------- VOTES ----------------
-export const votes = pgTable(
-	"votes",
-	{
-		id: serial("id").primaryKey(),
-		userId: varchar("user_id", { length: 255 }).notNull(),
-		productId: integer("product_id")
-			.notNull()
-			.references(() => products.id),
-
-		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-	},
-	(table) => ({
-		// 🚀 prevents duplicate voting
-		userProductIdx: uniqueIndex("votes_user_product_idx").on(
-			table.userId,
-			table.productId,
-		),
-		userIdx: index("votes_user_idx").on(table.userId),
-		productIdx: index("votes_product_idx").on(table.productId),
 	}),
 );
