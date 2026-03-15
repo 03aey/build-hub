@@ -30,7 +30,6 @@ export default async function AdminPage() {
 		redirect("/");
 	}
 	const allProducts = await getAllProductsAdmin();
-	console.log(allProducts);
 	const approvedProducts = allProducts.filter(
 		(product) => product.status === "approved",
 	);

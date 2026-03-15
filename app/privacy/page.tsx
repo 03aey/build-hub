@@ -439,7 +439,7 @@ export default function PrivacyPage() {
 								<div className="bg-muted/30 border border-muted/30 rounded-lg p-4 space-y-2">
 									<p>
 										<strong>Email:</strong>{" "}
-										yalok63211@gmail.com
+										yalok6321@gmail.com
 									</p>
 									<p>
 										<strong>Contact Form:</strong> Use the

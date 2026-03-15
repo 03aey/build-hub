@@ -12,8 +12,6 @@ import Link from "next/link";
 import VotingButtons from "./voting-buttons";
 
 export default function ProductCard({ product }: { product: ProductType }) {
-	const hasVoted = false;
-
 	return (
 		<Link href={`/products/${product.slug}`} className="h-fit">
 			<Card className="group card-hover hover:bg-primary-foreground/10 border-solid border-gray-400 min-h-45">
@@ -37,7 +35,6 @@ export default function ProductCard({ product }: { product: ProductType }) {
 						</div>
 
 						<VotingButtons
-							hasVoted={hasVoted}
 							productId={product.id}
 							voteCount={product.voteCount}
 						/>

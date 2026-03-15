@@ -9,11 +9,7 @@ import {
 	getFeaturedProducts,
 	getProductBySlug,
 } from "@/lib/products/product-select";
-import {
-	FileSymlink,
-	LineDotRightHorizontal,
-	UserMinus
-} from "lucide-react";
+import { FileSymlink, LineDotRightHorizontal, UserMinus } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

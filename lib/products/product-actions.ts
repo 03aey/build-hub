@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { FormState } from "@/types";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { productSchema } from "./product-validations";
@@ -124,12 +124,13 @@ export const upvoteProductAction = async (productId: number) => {
 			.update(products)
 			.set({
 				votedBy: [...votedBy, userId],
-				voteCount: product.voteCount + 1,
+				voteCount: sql`${products.voteCount} + 1`,
 			})
 			.where(eq(products.id, productId));
 
 		revalidatePath("/");
 		revalidatePath("/explore");
+		revalidatePath(`/products/${product.slug}`);
 
 		return { success: true };
 	} catch (error) {
@@ -168,16 +169,33 @@ export const downvoteProductAction = async (productId: number) => {
 			.update(products)
 			.set({
 				votedBy: votedBy.filter((id) => id !== userId),
-				voteCount: Math.max(0, product.voteCount - 1),
+				voteCount: sql`${products.voteCount} - 1`,
 			})
 			.where(eq(products.id, productId));
 
 		revalidatePath("/");
 		revalidatePath("/explore");
+		revalidatePath(`/products/${product.slug}`);
 
 		return { success: true };
 	} catch (error) {
 		console.error(error);
 		return { success: false };
 	}
+};
+
+export const getVoteStatusAction = async (productId: number) => {
+	const { userId } = await auth();
+
+	if (!userId) return false;
+
+	const product = await db
+		.select({ votedBy: products.votedBy })
+		.from(products)
+		.where(eq(products.id, productId))
+		.limit(1);
+
+	const votedBy = product?.[0]?.votedBy ?? [];
+
+	return votedBy.includes(userId);
 };

@@ -28,15 +28,24 @@ export default function ProductExplorer({
 
 	// ================= Update URL =================
 	useEffect(() => {
-		const params = new URLSearchParams();
+		const currentParams = new URLSearchParams(searchParams.toString());
 
-		params.set("sort", sortBy);
+		const currentSort = currentParams.get("sort") || "recent";
+		const currentQuery = currentParams.get("q") || "";
 
-		if (searchQuery) params.set("q", searchQuery);
-		else params.delete("q");
+		if (currentSort === sortBy && currentQuery === searchQuery) {
+			return;
+		}
 
-		router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-	}, [sortBy, searchQuery, router, pathname]);
+		currentParams.set("sort", sortBy);
+
+		if (searchQuery) currentParams.set("q", searchQuery);
+		else currentParams.delete("q");
+
+		router.replace(`${pathname}?${currentParams.toString()}`, {
+			scroll: false,
+		});
+	}, [sortBy, searchQuery, router, pathname, searchParams]);
 
 	// ================= Filtering =================
 	const filteredProducts = useMemo(() => {
