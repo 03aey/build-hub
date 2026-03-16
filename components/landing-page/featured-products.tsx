@@ -28,7 +28,7 @@ export default async function FeaturedProducts() {
 						asChild
 						className="hidden sm:flex"
 					>
-						<Link href="/explore">
+						<Link href="/explore?sort=trendingy">
 							View All <ChevronsRight className="size-4" />
 						</Link>
 					</Button>
