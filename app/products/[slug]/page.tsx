@@ -134,7 +134,7 @@ export default async function Product({
 										voteCount={voteCount}
 									/>
 								</div>
-								{voteCount > 100 && (
+								{voteCount > 500 && (
 									<div className="pt-6 border-t">
 										<Badge className="w-full justify-center py-2">
 											🔥 Featured Product

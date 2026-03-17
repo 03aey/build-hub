@@ -37,11 +37,11 @@ export async function getRecentlyLaunchedProducts() {
 	await connection();
 	const productsData = await getAllProducts();
 
-	const oneWeekAgo = new Date();
-	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	const twoWeekAgo = new Date();
+	twoWeekAgo.setDate(twoWeekAgo.getDate() - 14);
 
 	return productsData.filter(
-		(product) => product.createdAt && product.createdAt >= oneWeekAgo,
+		(product) => product.createdAt && product.createdAt >= twoWeekAgo,
 	);
 }
 
