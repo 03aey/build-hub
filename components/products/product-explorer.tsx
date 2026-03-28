@@ -19,33 +19,26 @@ export default function ProductExplorer({
 	const searchParams = useSearchParams();
 
 	// ================= Initialize from URL =================
-	const initialSort =
-		(searchParams.get("sort") as "trending" | "recent") || "recent";
 	const initialQuery = searchParams.get("q") || "";
 
-	const [sortBy, setSortBy] = useState<"trending" | "recent">(initialSort);
+	const sortBy =
+		(searchParams.get("sort") as "trending" | "recent") || "recent";
 	const [searchQuery, setSearchQuery] = useState(initialQuery);
 
 	// ================= Update URL =================
 	useEffect(() => {
-		const currentParams = new URLSearchParams(searchParams.toString());
+		const params = new URLSearchParams(searchParams.toString());
 
-		const currentSort = currentParams.get("sort") || "recent";
-		const currentQuery = currentParams.get("q") || "";
+		const currentQuery = params.get("q") || "";
+		if (currentQuery === searchQuery) return;
 
-		if (currentSort === sortBy && currentQuery === searchQuery) {
-			return;
-		}
+		if (searchQuery) params.set("q", searchQuery);
+		else params.delete("q");
 
-		currentParams.set("sort", sortBy);
-
-		if (searchQuery) currentParams.set("q", searchQuery);
-		else currentParams.delete("q");
-
-		router.replace(`${pathname}?${currentParams.toString()}`, {
+		router.replace(`${pathname}?${params.toString()}`, {
 			scroll: false,
 		});
-	}, [sortBy, searchQuery, router, pathname, searchParams]);
+	}, [searchQuery, router, pathname, searchParams]);
 
 	// ================= Filtering =================
 	const filteredProducts = useMemo(() => {
@@ -94,6 +87,15 @@ export default function ProductExplorer({
 		handlePageChange();
 	}, [searchQuery, sortBy]);
 
+	const updateSort = (value: "trending" | "recent") => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("sort", value);
+
+		router.replace(`${pathname}?${params.toString()}`, {
+			scroll: false,
+		});
+	};
+
 	return (
 		<div>
 			<div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -111,7 +113,7 @@ export default function ProductExplorer({
 				<div className="flex gap-2">
 					<Button
 						variant={sortBy === "trending" ? "default" : "outline"}
-						onClick={() => setSortBy("trending")}
+						onClick={() => updateSort("trending")}
 					>
 						<TrendingUpIcon className="size-4" />
 						Trending
@@ -119,7 +121,7 @@ export default function ProductExplorer({
 
 					<Button
 						variant={sortBy === "recent" ? "default" : "outline"}
-						onClick={() => setSortBy("recent")}
+						onClick={() => updateSort("recent")}
 					>
 						<FolderClock className="size-4" />
 						Recent
