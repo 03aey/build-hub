@@ -83,7 +83,7 @@ export default function Footer() {
 							rel="noopener noreferrer"
 							className="text-muted-foreground hover:text-primary duration-300 transition-colors"
 							aria-label="Twitter"
-							href="https://x.com/@alokdotcom"
+							href="https://x.com/@03aeyx"
 						>
 							<Twitter className="size-5" />
 						</Link>
@@ -92,7 +92,7 @@ export default function Footer() {
 							rel="noopener noreferrer"
 							className="text-muted-foreground hover:text-primary duration-300 transition-colors"
 							aria-label="GitHub"
-							href="https://github.com/alok-x0s1"
+							href="https://github.com/03aey"
 						>
 							<Github className="size-5" />
 						</Link>
@@ -101,7 +101,7 @@ export default function Footer() {
 							rel="noopener noreferrer"
 							className="text-muted-foreground hover:text-primary duration-300 transition-colors"
 							aria-label="LinkedIn"
-							href="https://linkedin.com/in/alok-x0s1"
+							href="https://linkedin.com/in/03aey"
 						>
 							<Linkedin className="size-5" />
 						</Link>

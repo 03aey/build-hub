@@ -6,7 +6,6 @@ A platform for creators to showcase their projects, get authentic feedback, and 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-cyan)
 ![Drizzle ORM](https://img.shields.io/badge/Drizzle-ORM-orange)
-[![Vercel](https://img.shields.io/badge/Vercel-Portfolio-000000?logo=vercel&logoColor=white)](https://yalok.vercel.app)
 
 ## Features
 
@@ -65,7 +64,7 @@ A platform for creators to showcase their projects, get authentic feedback, and 
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/alok-x0s1/build-hub.git
+    git clone https://github.com/03aey/build-hub.git
     cd build-hub
     ```
 
@@ -107,7 +106,7 @@ A platform for creators to showcase their projects, get authentic feedback, and 
 
 6. **Open your browser**
 
-    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+    Navigate to [localhost:3000](http://localhost:3000) to see the application.
 
 ## Available Scripts
 
@@ -145,8 +144,9 @@ We welcome contributions. Please follow these steps:
 
 Built with ❤️ by the BuildHub team. Join thousands of creators sharing their work.
 
-### Connect With Me
+---
 
-[![GitHub](https://img.shields.io/badge/GitHub-Alok%20Yadav-181717?logo=github)](https://github.com/alok-x0s1)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Alok%20Yadav-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/alok-x0s1)
-[![LinkedIn](https://img.shields.io/badge/Instagram-Alok%20Yadav-E4405F?logo=instagram&logoColor=white)](https://instagram.com/9.pnpm)
+[![GitHub](https://img.shields.io/badge/GitHub-03aey-181717?logo=github&logoColor=white)](https://github.com/03aey)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-in%2F03aey-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/03aey)
+[![Portfolio](https://img.shields.io/badge/Portfolio-03aey.vercel.app-000000?logo=vercel&logoColor=white)](https://03aey.vercel.app)
+[![Linktree](https://img.shields.io/badge/Linktree-03aey-43E55E?logo=linktree&logoColor=white)](https://linktr.ee/03aey)
