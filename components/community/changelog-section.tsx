@@ -22,20 +22,16 @@ import { ProductUpdateType } from "@/types";
 import {
 	Bug,
 	Calendar,
-	ChevronsUp,
-	History,
 	Loader2,
 	Plus,
-	Rocket,
 	Send,
 	Sparkles,
-	Sunrise,
 	Tag,
 	Target,
 	Trash2,
-	Zap,
+	Zap
 } from "lucide-react";
-import React, { useActionState, useState } from "react";
+import { useActionState, useState } from "react";
 import EmptyState from "../common/empty-state";
 
 interface ChangelogSectionProps {

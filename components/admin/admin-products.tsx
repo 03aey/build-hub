@@ -1,12 +1,12 @@
 "use client";
 
-import { ProductType } from "@/types";
-import AdminProductCard from "./admin-product-card";
-import { useMemo, useState } from "react";
-import { Pagination } from "../pagination";
-import EmptyState from "../common/empty-state";
-import { LucideIcon, Sunrise } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProductType } from "@/types";
+import { LucideIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import EmptyState from "../common/empty-state";
+import { Pagination } from "../pagination";
+import AdminProductCard from "./admin-product-card";
 
 export default function AdminProducts({
 	products,
@@ -39,8 +39,9 @@ export default function AdminProducts({
 			<div className="">
 				{products.length === 0 ? (
 					<EmptyState
+						header={`No ${headerMessage.toLowerCase()}`}
 						message={emptyMessage}
-						icon={emptyIcon || Sunrise}
+						icon={emptyIcon}
 					/>
 				) : (
 					<div

@@ -1,28 +1,38 @@
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Sunrise } from "lucide-react";
 
 export default function EmptyState({
+	header,
 	message,
 	icon: Icon,
 	className,
+	button
 }: {
+	header: string;
 	message: string;
 	icon?: LucideIcon;
 	className?: string;
+	button?: React.ReactNode;
 }) {
 	return (
 		<div
 			className={cn(
-				"empty-state h-65 flex flex-col justify-center items-center",
+				"h-65 px-4 flex flex-col justify-center items-center text-center border rounded-lg bg-background/50 border-dashed space-y-2",
 				className,
 			)}
 		>
-			{Icon && (
-				<Icon className="size-10 md:size-12 text-muted-foreground/90 mx-auto mb-4" />
-			)}
-			<p className="text-sm md:text-lg text-muted-foreground">
-				{message}
-			</p>
+			{Icon ? (
+				<Icon className="size-8 md:size-10 text-muted-foreground/90" />
+			) : <Sunrise className="size-8 md:size-10 text-muted-foreground/90" />}
+
+			<div className="space-y-1 max-w-sm mx-auto">
+				<h4 className="font-semibold text-base">{header}</h4>
+				<p className="text-sm text-muted-foreground">
+					{message}
+				</p>
+			</div>
+
+			{button}
 		</div>
 	);
 }

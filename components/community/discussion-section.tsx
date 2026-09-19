@@ -22,12 +22,11 @@ import {
 	MessagesSquare,
 	Send,
 	Sparkles,
-	Sunrise,
 	ThumbsUp,
 	Trash2,
-	User,
+	User
 } from "lucide-react";
-import React, { useActionState, useState, useTransition } from "react";
+import { useActionState, useState, useTransition } from "react";
 import EmptyState from "../common/empty-state";
 
 interface DiscussionSectionProps {

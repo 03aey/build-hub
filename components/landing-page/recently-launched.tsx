@@ -35,8 +35,8 @@ async function RecentlyLaunchedProducts() {
 		</div>
 	) : (
 		<EmptyState
-			message="No products launched in the last week. Check back soon for new launches."
-			icon={Sunrise}
+			header="No products launched in the last week"
+			message="Check back soon for new launches. Why not be the first to launch a product?"
 		/>
 	);
 }

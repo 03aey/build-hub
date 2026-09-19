@@ -42,8 +42,8 @@ export default async function FeaturedProducts() {
 					</div>
 				) : (
 					<EmptyState
-						message="No featured products today. Check back tomorrow!"
-						icon={Sunrise}
+						header="No Featured Products Today"
+						message="No products have reached 500 upvotes yet. Be the first to feature a product."
 					/>
 				)}
 			</div>

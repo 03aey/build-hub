@@ -17,7 +17,6 @@ import {
 	addReviewAction,
 	deleteReviewAction,
 } from "@/lib/community/community-actions";
-import { cn } from "@/lib/utils";
 import { ProductReviewType, ReviewStatsType } from "@/types";
 import { useAuth } from "@clerk/nextjs";
 import {
@@ -26,16 +25,15 @@ import {
 	Layout,
 	Loader2,
 	PenSquare,
-	Sparkles,
 	Star,
 	ThumbsDown,
 	ThumbsUp,
 	Trash2,
-	User,
+	User
 } from "lucide-react";
-import React, { useActionState, useState } from "react";
-import StarRating from "./star-rating";
+import { useActionState, useState } from "react";
 import EmptyState from "../common/empty-state";
+import StarRating from "./star-rating";
 
 interface ReviewsSectionProps {
 	productId: number;
