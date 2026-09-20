@@ -4,12 +4,12 @@ import EmptyState from "@/components/common/empty-state";
 import SectionHeader from "@/components/common/section-header";
 import ProductCard from "@/components/products/product-card";
 import { Button } from "@/components/ui/button";
-import { getFeaturedProducts } from "@/lib/products/product-select";
-import { Birdhouse, ChevronsRight, Sunrise } from "lucide-react";
+import { getAllProducts } from "@/lib/products/product-select";
+import { Birdhouse, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function FeaturedProducts() {
-	const products = await getFeaturedProducts();
+	const products = await getAllProducts();
 	const featuredProducts = products.filter(
 		(product) => product.voteCount > 500,
 	);

@@ -3,17 +3,6 @@ import { products } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { connection } from "next/server";
 
-export async function getFeaturedProducts() {
-	"use cache";
-	const productsData = await db
-		.select()
-		.from(products)
-		.where(eq(products.status, "approved"))
-		.orderBy(desc(products.createdAt));
-
-	return productsData;
-}
-
 export async function getAllProductsAdmin() {
 	const productsData = await db
 		.select()
@@ -24,6 +13,7 @@ export async function getAllProductsAdmin() {
 }
 
 export async function getAllProducts() {
+	"use cache";
 	const productsData = await db
 		.select()
 		.from(products)
@@ -46,6 +36,7 @@ export async function getRecentlyLaunchedProducts() {
 }
 
 export async function getProductBySlug(slug: string) {
+	"use cache";
 	const product = await db
 		.select()
 		.from(products)

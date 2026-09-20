@@ -1,6 +1,7 @@
 import BackButton from "@/components/back-button";
 import SectionHeader from "@/components/common/section-header";
 import CommunityTabs from "@/components/community/community-tabs";
+import { ProductDetailSkeleton } from "@/components/products/poduct-skeleton";
 import VotingButtons from "@/components/products/voting-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
 	getProductUpdates,
 } from "@/lib/community/community-select";
 import {
-	getFeaturedProducts,
+	getAllProducts,
 	getProductBySlug,
 } from "@/lib/products/product-select";
 import { auth, currentUser } from "@clerk/nextjs/server";
@@ -25,9 +26,11 @@ import {
 } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
 export const generateStaticParams = async () => {
-	const products = await getFeaturedProducts();
+	const products = await getAllProducts();
 	return products.map((product) => ({
 		slug: product.slug.toString(),
 	}));
@@ -56,11 +59,24 @@ export async function generateMetadata({
 	};
 }
 
-export default async function Product({
+export default function Product({
 	params,
 }: {
 	params: Promise<{ slug: string }>;
 }) {
+	return (
+		<Suspense fallback={<ProductDetailSkeleton />}>
+			<ProductContent params={params} />
+		</Suspense>
+	);
+}
+
+async function ProductContent({
+	params,
+}: {
+	params: Promise<{ slug: string }>;
+}) {
+	await connection();
 	const { slug } = await params;
 	const product = await getProductBySlug(slug);
 
@@ -77,7 +93,7 @@ export default async function Product({
 		(product.userId === userId ||
 			(product.submittedBy &&
 				user?.primaryEmailAddress?.emailAddress ===
-					product.submittedBy)),
+				product.submittedBy)),
 	);
 
 	// Fetch community data
@@ -186,7 +202,7 @@ export default async function Product({
 										).format(
 											new Date(
 												product.createdAt?.toISOString() ??
-													"",
+												"",
 											),
 										),
 									},

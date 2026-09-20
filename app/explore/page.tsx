@@ -2,7 +2,7 @@
 
 import SectionHeader from "@/components/common/section-header";
 import ProductExplorer from "@/components/products/product-explorer";
-import { getFeaturedProducts } from "@/lib/products/product-select";
+import { getAllProducts } from "@/lib/products/product-select";
 import { Loader2, ZodiacAries } from "lucide-react";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ExplorePage() {
-	const products = await getFeaturedProducts();
+	const products = await getAllProducts();
 
 	return (
 		<div className="py-20 pt-10">
