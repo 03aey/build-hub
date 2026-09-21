@@ -1,470 +1,290 @@
 import SectionHeader from "@/components/common/section-header";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { PRIVACY_TLDR_CARDS } from "@/lib/data/site-data";
 import {
-	CardSim,
-	EarthLock,
-	Eraser,
-	EthernetPort,
-	EyeClosed,
-	FingerprintPattern,
-	Megaphone,
+	CheckCircle2,
+	Database,
+	Eye,
+	Globe,
+	KeyRound,
+	Lock,
+	Mail,
 	MessageSquareLock,
-	MonitorCloud,
-	Plane,
-	QrCode,
-	ScanEye,
-	ScrollText,
-	Settings2,
-	ShieldUser,
-	SmartphoneNfc,
-	Sprout,
-	SquareAsterisk,
-	TowerControl,
-	UserKey
+	Server,
+	ShieldAlert,
+	ShieldCheck,
 } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
 	title: "Privacy Policy - BuildHub",
 	description:
-		"BuildHub's comprehensive privacy policy explaining how we collect, use, and protect your personal information.",
+		"BuildHub's comprehensive privacy policy explaining how we collect, handle, and protect your data with total transparency.",
 };
 
 export default function PrivacyPage() {
 	return (
-		<div className="py-20 pt-10">
-			<div className="wrapper">
-				<div className="mb-6">
+		<div className="py-20 pt-4">
+			<div className="wrapper space-y-6">
+				{/* Top Header */}
+				<div className="space-y-4">
+					<div className="inline-flex items-center">
+						<Badge
+							variant="outline"
+							className="px-3.5 py-1.5 rounded-full text-xs font-semibold gap-1.5 border-primary/30 bg-primary/10 text-primary"
+						>
+							<ShieldCheck className="size-3.5" />
+							Data Privacy & Transparency • Last Updated: March 2026
+						</Badge>
+					</div>
+
 					<SectionHeader
 						title="Privacy Policy"
 						icon={MessageSquareLock}
-						description="Your privacy is important to us. This policy explains how we collect, use, and protect your information."
+						description="We believe in radical transparency and data minimalism. Here is an honest breakdown of what information we collect, how it powers your builder experience, and how we keep it safe."
 					/>
 				</div>
 
-				<div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-auto gap-6">
-					<Card className="md:col-span-2 lg:col-span-3">
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<ScrollText className="size-5 text-primary" />
-								Introduction
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									At BuildHub, we are committed to protecting
-									your privacy and ensuring the security of
-									your personal information. This Privacy
-									Policy explains how we collect, use,
-									disclose, and safeguard your information
-									when you use our platform.
-								</p>
-								<p>
-									By using BuildHub, you agree to the
-									collection and use of information in
-									accordance with this policy. If you disagree
-									with any part of this privacy policy, please
-									do not use our platform.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
+				{/* Quick TL;DR Cards */}
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+					{PRIVACY_TLDR_CARDS.map((card) => {
+						const Icon = card.icon;
+						return (
+							<Card
+								key={card.title}
+								className="rounded-lg border-border/60 bg-card/60"
+							>
+								<CardHeader className="pb-2">
+									<div
+										className={`size-9 rounded-lg flex items-center justify-center mb-1 ${card.iconColor}`}
+									>
+										<Icon className="size-4.5" />
+									</div>
+									<CardTitle className="text-base">{card.title}</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<p className="text-xs text-muted-foreground leading-relaxed">
+										{card.description}
+									</p>
+								</CardContent>
+							</Card>
+						);
+					})}
+				</div>
 
-					<Card className="lg:row-span-2">
+				{/* Detailed Policy Sections */}
+				<div className="space-y-6 text-foreground/90">
+					{/* 1. Information We Collect */}
+					<Card className="rounded-lg border-border/70 bg-card/40">
 						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<QrCode className="size-5 text-primary" />
-								Information We Collect
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <Database className="size-5 text-primary" /> */}
+								1. Information We Collect
 							</CardTitle>
 						</CardHeader>
-						<Separator />
-						<CardContent>
-							<div className="space-y-6">
-								<div>
-									<h4 className="font-semibold mb-2">
-										Personal Information
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>
+								We only collect information strictly necessary to provide BuildHub&apos;s product discovery and community discussion features:
+							</p>
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+								<div className="p-4 rounded-lg border bg-background/50 space-y-1.5">
+									<h4 className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+										<CheckCircle2 className="size-3.5 text-primary" />
+										Account & Auth Data
 									</h4>
-									<p className="text-muted-foreground">
-										When you create an account, we collect
-										information such as your name, email
-										address, and other details you provide
-										during registration.
+									<p className="text-xs">
+										When you log in via Clerk, we receive your primary email address, public profile name, and avatar image to authenticate your maker identity.
 									</p>
 								</div>
-								<div>
-									<h4 className="font-semibold mb-2">
-										Project Information
+
+								<div className="p-4 rounded-lg border bg-background/50 space-y-1.5">
+									<h4 className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+										<CheckCircle2 className="size-3.5 text-primary" />
+										Product Submissions
 									</h4>
-									<p className="text-muted-foreground">
-										We collect information about projects
-										you submit, including descriptions,
-										links, images, and any other content you
-										provide to showcase your work.
+									<p className="text-xs">
+										Product name, tagline, description, website URL, and tags you provide when listing a project on BuildHub.
 									</p>
 								</div>
-								<div>
-									<h4 className="font-semibold mb-2">
-										Usage Data
+
+								<div className="p-4 rounded-lg border bg-background/50 space-y-1.5">
+									<h4 className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+										<CheckCircle2 className="size-3.5 text-primary" />
+										Community Contributions
 									</h4>
-									<p className="text-muted-foreground">
-										We collect information about how you use
-										our platform, including pages visited,
-										features used, and interaction patterns
-										to improve our services.
+									<p className="text-xs">
+										Discussions, bug reports, feature suggestions, maker changelogs, upvotes, and star rating reviews you author.
 									</p>
 								</div>
-								<div>
-									<h4 className="font-semibold mb-2">
-										Technical Information
+
+								<div className="p-4 rounded-lg border bg-background/50 space-y-1.5">
+									<h4 className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+										<CheckCircle2 className="size-3.5 text-primary" />
+										Technical Telemetry
 									</h4>
-									<p className="text-muted-foreground">
-										We automatically collect technical
-										information such as IP address, browser
-										type, device information, and access
-										logs for security and analytics
-										purposes.
+									<p className="text-xs">
+										IP address, browser type, and basic request headers collected solely for security rate limiting and preventing fraudulent upvoting bots.
 									</p>
 								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="lg:col-span-2">
+					{/* 2. How We Use Information */}
+					<Card className="rounded-lg border-border/70 bg-card/40">
 						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<SquareAsterisk className="size-5 text-primary" />
-								How We Use Your Information
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <Eye className="size-5 text-primary" /> */}
+								2. How We Use Your Information
 							</CardTitle>
 						</CardHeader>
-						<Separator />
-						<CardContent>
-							<div className="space-y-4">
-								<div className="flex items-start gap-3">
-									<MonitorCloud className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Service Provision
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											To provide, maintain, and improve
-											our platform and services
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<ScanEye className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Content Display
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											To display your projects and profile
-											information on our platform
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<EthernetPort className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Community Features
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											To enable community interactions,
-											feedback, and collaboration features
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<SmartphoneNfc className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Communication
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											To communicate with you about
-											platform updates, security notices,
-											and support
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<ShieldUser className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Security
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											To protect against fraud, abuse, and
-											ensure platform security
-										</p>
-									</div>
-								</div>
-							</div>
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>We process your data for the following legitimate purposes:</p>
+							<ul className="space-y-1 list-disc pl-5">
+								<li>
+									<strong className="text-foreground">Product Presentation:</strong> Displaying your submitted products, tags, and maker profile across the BuildHub directory.
+								</li>
+								<li>
+									<strong className="text-foreground">Authentic Feedback System:</strong> Enabling nested comments, bug report tracking, and review score aggregation.
+								</li>
+								<li>
+									<strong className="text-foreground">Vote Verification:</strong> Preventing automated bot manipulation and ensuring fair community ranking.
+								</li>
+								<li>
+									<strong className="text-foreground">Service Communications:</strong> Sending essential administrative emails regarding product approvals, security notices, or support inquiries.
+								</li>
+							</ul>
 						</CardContent>
 					</Card>
 
-					<Card className="lg:col-span-2">
+					{/* 3. Third-Party Service Providers */}
+					<Card className="rounded-lg border-border/70 bg-card/40">
 						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<FingerprintPattern className="size-5 text-primary" />
-								Data Protection and Security
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <Server className="size-5 text-primary" /> */}
+								3. Infrastructure & Subprocessors
 							</CardTitle>
 						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									We implement appropriate technical and
-									organizational measures to protect your
-									personal information against unauthorized
-									access, alteration, disclosure, or
-									destruction.
-								</p>
-								<p>
-									These measures include encrypted data
-									transmission, secure storage systems,
-									regular security audits, and restricted
-									access to personal information.
-								</p>
-								<p>
-									However, no method of transmission over the
-									internet or method of electronic storage is
-									100% secure. While we strive to use
-									commercially acceptable means to protect
-									your personal information, we cannot
-									guarantee its absolute security.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<TowerControl className="size-5 text-primary" />
-								Your Rights and Choices
-							</CardTitle>
-						</CardHeader>
-						<Separator />
-						<CardContent>
-							<div className="space-y-4">
-								<div className="flex items-start gap-3">
-									<EyeClosed className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Access and Review
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											You can access and review your
-											personal information through your
-											account settings
-										</p>
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>
+								BuildHub partners with trusted cloud infrastructure providers that adhere to rigorous security and compliance standards:
+							</p>
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+								<div className="p-3.5 rounded-lg border bg-background/50 space-y-1">
+									<div className="flex items-center gap-2 font-semibold text-foreground text-sm">
+										<KeyRound className="size-4 text-primary" />
+										Clerk Inc.
 									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<Settings2 className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Update and Correct
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											You can update or correct your
-											personal information at any time
-											through your profile
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<Eraser className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Deletion
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											You can request deletion of your
-											account and associated data, subject
-											to legal obligations
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start gap-3">
-									<UserKey className="size-4 text-primary mt-1 shrink-0" />
-									<div>
-										<h4 className="font-semibold">
-											Privacy Controls
-										</h4>
-										<p className="text-muted-foreground text-sm">
-											You can control visibility of your
-											projects and profile information
-											through privacy settings
-										</p>
-									</div>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card className="lg:col-span-2">
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<Sprout className="size-5 text-primary" />
-								Third-Party Services
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									BuildHub may use third-party services for
-									analytics, authentication, and other
-									platform features. These services may
-									collect information on our behalf and are
-									subject to their own privacy policies.
-								</p>
-								<p>
-									We use authentication services to manage
-									user accounts and ensure secure access to
-									our platform. Analytics services help us
-									understand how our platform is used to
-									improve user experience.
-								</p>
-								<p>
-									We only share information with third parties
-									that is necessary for them to provide their
-									services, and we require them to protect
-									your information in accordance with
-									applicable privacy laws.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<EarthLock className="size-5 text-primary" />
-								Children&apos;s Privacy
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									BuildHub is not intended for children under
-									the age of 13. We do not knowingly collect
-									personal information from children under 13.
-									If you are a parent or guardian and believe
-									your child has provided us with personal
-									information, please contact us immediately.
-								</p>
-								<p>
-									If we become aware that we have collected
-									personal information from children without
-									verification of parental consent, we take
-									steps to remove that information from our
-									servers.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<Plane className="size-5 text-primary" />
-								International Data Transfers
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									Your information may be transferred to and
-									processed in countries other than your own.
-									We ensure appropriate safeguards are in
-									place to protect your information in
-									accordance with applicable data protection
-									laws.
-								</p>
-								<p>
-									When we transfer your information
-									internationally, we use standard contractual
-									clauses or other legally recognized
-									mechanisms to ensure adequate protection of
-									your personal data.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<Megaphone className="size-5 text-primary" />
-								Changes to This Privacy Policy
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									We may update our Privacy Policy from time
-									to time. We will notify you of any changes
-									by posting the new Privacy Policy on this
-									page and updating the &quot;Last
-									Updated&quot; date.
-								</p>
-								<p>
-									You are advised to review this Privacy
-									Policy periodically for any changes. Changes
-									to this Privacy Policy are effective when
-									they are posted on this page.
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card className="md:col-span-2 lg:col-span-3">
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<CardSim className="size-5 text-primary" />
-								Contact Us
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4 text-muted-foreground">
-								<p>
-									If you have any questions about this Privacy
-									Policy or our data practices, please contact
-									us:
-								</p>
-								<div className="bg-muted/30 border border-muted/30 rounded-lg p-4 space-y-2">
-									<p>
-										<strong>Email:</strong>{" "}
-										yalok6321@gmail.com
-									</p>
-									<p>
-										<strong>Contact Form:</strong> Use the
-										contact form on our website
-									</p>
-									<p>
-										<strong>Response Time:</strong> We
-										typically respond within 5-7 business
-										days
+									<p className="text-xs">
+										Handles secure authentication, session management, and OAuth integrations.
 									</p>
 								</div>
-								<p>
-									We will investigate your concerns and
-									respond in accordance with applicable
-									privacy laws. If you have unresolved privacy
-									concerns, you may also contact relevant data
-									protection authorities.
-								</p>
+
+								<div className="p-3.5 rounded-lg border bg-background/50 space-y-1">
+									<div className="flex items-center gap-2 font-semibold text-foreground text-sm">
+										<Database className="size-4 text-primary" />
+										Neon Database
+									</div>
+									<p className="text-xs">
+										Provides encrypted serverless PostgreSQL cloud storage with automated backups.
+									</p>
+								</div>
+
+								<div className="p-3.5 rounded-lg border bg-background/50 space-y-1">
+									<div className="flex items-center gap-2 font-semibold text-foreground text-sm">
+										<Globe className="size-4 text-primary" />
+										Vercel
+									</div>
+									<p className="text-xs">
+										Global Edge CDN hosting and SSL/TLS certificate termination.
+									</p>
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<div className="text-start text-muted-foreground text-sm">
-						<p>Last Updated: March 8, 2026</p>
-					</div>
+					{/* 4. Data Security & Storage */}
+					<Card className="rounded-lg border-border/70 bg-card/40">
+						<CardHeader>
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <Lock className="size-5 text-primary" /> */}
+								4. Data Protection & Security Controls
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>
+								We implement technical and organizational measures to safeguard your personal data, including:
+							</p>
+							<ul className="space-y-1 list-disc pl-5">
+								<li>End-to-end encryption in transit via modern TLS 1.3 cryptographic protocols.</li>
+								<li>Encrypted database storage at rest with strict least-privilege administrative access.</li>
+								<li>Continuous vulnerability scans and dependency patch management.</li>
+								<li>Zero storage of sensitive payment credentials or plaintext passwords.</li>
+							</ul>
+						</CardContent>
+					</Card>
+
+					{/* 5. User Rights (GDPR & CCPA) */}
+					<Card className="rounded-lg border-border/70 bg-card/40">
+						<CardHeader>
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <ShieldAlert className="size-5 text-primary" /> */}
+								5. Your Rights & Data Choices
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>
+								Regardless of your location, BuildHub affords all users full control over their personal information:
+							</p>
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+								<div className="p-3 rounded-lg border bg-background/50">
+									<strong className="text-foreground text-sm block mb-1">Right to Access & Export:</strong>
+									<span className="text-xs">Request a machine-readable copy of your profile and submitted products.</span>
+								</div>
+								<div className="p-3 rounded-lg border bg-background/50">
+									<strong className="text-foreground text-sm block mb-1">Right to Rectify:</strong>
+									<span className="text-xs">Update your product details, descriptions, and tags at any time.</span>
+								</div>
+								<div className="p-3 rounded-lg border bg-background/50">
+									<strong className="text-foreground text-sm block mb-1">Right to Erasure (Forget):</strong>
+									<span className="text-xs">Request the permanent deletion of your account and all associated submissions.</span>
+								</div>
+								<div className="p-3 rounded-lg border bg-background/50">
+									<strong className="text-foreground text-sm block mb-1">Right to Restrict Processing:</strong>
+									<span className="text-xs">Unpublish or hide your product listings from public discovery indices.</span>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+
+					{/* 6. Policy Updates & Contact */}
+					<Card className="rounded-lg border-primary/20 bg-primary/5">
+						<CardHeader>
+							<CardTitle className="flex items-center gap-2.5 text-xl">
+								{/* <Mail className="size-5 text-primary" /> */}
+								6. Contacting BuildHub About Privacy
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+							<p>
+								If you have questions, inquiries regarding this Privacy Policy, or wish to exercise your data protection rights, please contact our team:
+							</p>
+							<div className="flex flex-wrap items-center gap-4 pt-1">
+								<div className="p-3 rounded-lg border bg-card/80 text-xs space-y-1 w-50">
+									<span className="text-muted-foreground block">Email Support:</span>
+									<span className="font-semibold text-foreground">yalok6321@gmail.com</span>
+								</div>
+								<div className="p-3 rounded-lg border bg-card/80 text-xs space-y-1 w-75">
+									<span className="text-muted-foreground block">Interactive Help Desk:</span>
+									<Link href="/contact" className="font-semibold text-primary hover:underline">
+										Submit a message on our Contact Page &rarr;
+									</Link>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 			</div>
 		</div>

@@ -16,12 +16,12 @@ export default async function ExplorePage() {
 	const products = await getAllProducts();
 
 	return (
-		<div className="py-20 pt-10">
+		<div className="pb-20 pt-4">
 			<div className="wrapper">
-				<div className="mb-12">
+				<div className="mb-4">
 					<SectionHeader
 						title="Explore Products"
-						icon={ZodiacAries}
+						// icon={ZodiacAries}
 						description="Browse and discover amazing projects from our community"
 					/>
 				</div>

@@ -10,32 +10,29 @@ import { contactSchema } from "./contact-validations";
 export const contactSubmissionsAction = async (
 	prevState: FormState,
 	formData: FormData,
-) => {
+): Promise<FormState> => {
 	try {
 		const { userId } = await auth();
 
 		if (!userId) {
 			return {
 				success: false,
-				message: "You must be signed in to submit a product",
-				errors: undefined,
+				message: "You must be signed in to submit a contact inquiry.",
 			};
 		}
 
 		const rawFormData = Object.fromEntries(formData.entries());
-
 		const validatedData = contactSchema.safeParse(rawFormData);
 
 		if (!validatedData.success) {
-			console.log(validatedData.error.flatten().fieldErrors);
 			return {
 				success: false,
 				errors: validatedData.error.flatten().fieldErrors,
-				message: "Please check the form.",
+				message: "Please correct the highlighted fields and try again.",
 			};
 		}
-		const { name, email, subject, description, reason } =
-			validatedData.data;
+
+		const { name, email, subject, description, reason } = validatedData.data;
 
 		await db.insert(contactSubmissions).values({
 			name,
@@ -51,24 +48,22 @@ export const contactSubmissionsAction = async (
 		return {
 			success: true,
 			message:
-				"Message submitted successfully! We'll get back to you soon.",
-			errors: undefined,
+				"Your message has been sent successfully! Our team will get back to you shortly.",
 		};
 	} catch (error) {
-		console.error(error);
+		console.error("Error submitting contact inquiry:", error);
 
 		if (error instanceof z.ZodError) {
 			return {
 				success: false,
 				errors: error.flatten().fieldErrors,
-				message: "Validation failed. Please check the form.",
+				message: "Validation failed. Please check your form inputs.",
 			};
 		}
 
 		return {
 			success: false,
-			errors: undefined,
-			message: "Failed to submit message",
+			message: "Failed to send message due to a server error. Please try again later.",
 		};
 	}
 };

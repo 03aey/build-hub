@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteConfirmDialog from "@/components/common/delete-confirm-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,21 +18,19 @@ import {
 	addChangelogAction,
 	deleteChangelogAction,
 } from "@/lib/community/community-actions";
-import { cn } from "@/lib/utils";
-import { ProductUpdateType } from "@/types";
+import { CHANGELOG_CATEGORIES } from "@/lib/data/site-data";
+import { cn, formatUpdateDate } from "@/lib/utils";
+import { ChangelogCategoryId, ProductUpdateType } from "@/types";
 import {
-	Bug,
+	AlertCircle,
 	Calendar,
 	Loader2,
 	Plus,
 	Send,
-	Sparkles,
 	Tag,
-	Target,
 	Trash2,
-	Zap
 } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import EmptyState from "../common/empty-state";
 
 interface ChangelogSectionProps {
@@ -40,33 +39,6 @@ interface ChangelogSectionProps {
 	isMaker: boolean;
 	productName: string;
 }
-
-const CATEGORY_MAP = {
-	feature: {
-		label: "New Feature",
-		icon: Sparkles,
-		color: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-		badgeClass: "bg-purple-500 text-white",
-	},
-	milestone: {
-		label: "Milestone",
-		icon: Target,
-		color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-		badgeClass: "bg-emerald-500 text-white",
-	},
-	improvement: {
-		label: "Improvement",
-		icon: Zap,
-		color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-		badgeClass: "bg-blue-500 text-white",
-	},
-	fix: {
-		label: "Bug Fix",
-		icon: Bug,
-		color: "bg-rose-500/10 text-rose-500 border-rose-500/20",
-		badgeClass: "bg-rose-500 text-white",
-	},
-};
 
 export default function ChangelogSection({
 	productId,
@@ -79,18 +51,28 @@ export default function ChangelogSection({
 		success: false,
 		message: "",
 	});
-	const [selectedCategory, setSelectedCategory] = useState<
-		"feature" | "milestone" | "improvement" | "fix"
-	>("feature");
+	const [selectedCategory, setSelectedCategory] = useState<ChangelogCategoryId>("feature");
 
-	const handlePostSubmit = async (formData: FormData) => {
+	useEffect(() => {
+		if (state?.success) {
+			setIsOpen(false);
+		}
+	}, [state]);
+
+	const handlePostSubmit = (formData: FormData) => {
 		formData.set("productId", productId.toString());
 		formData.set("category", selectedCategory);
 		formAction(formData);
-		if (!state.errors) {
-			setIsOpen(false);
-		}
 	};
+
+	const getFieldErrors = (fieldName: string): string[] => {
+		if (!state.errors) return [];
+		return (state.errors as Record<string, string[]>)[fieldName] ?? [];
+	};
+
+	const titleErrors = getFieldErrors("title");
+	const contentErrors = getFieldErrors("content");
+	const versionErrors = getFieldErrors("version");
 
 	return (
 		<div className="space-y-8">
@@ -98,11 +80,7 @@ export default function ChangelogSection({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
-						{/* <Rocket className="size-5 text-primary" /> */}
 						<h3 className="text-xl font-bold">Maker Changelog & Milestones</h3>
-						{/* <Badge variant="secondary" className="text-xs">
-							{updates.length}
-						</Badge> */}
 					</div>
 					<p className="text-xs text-muted-foreground">
 						Follow the journey, new features, and development progress of {productName}.
@@ -112,15 +90,14 @@ export default function ChangelogSection({
 				{isMaker && (
 					<Dialog open={isOpen} onOpenChange={setIsOpen}>
 						<DialogTrigger asChild>
-							<Button size="sm" className="gap-2 shrink-0">
+							<Button size="sm" className="gap-2 shrink-0 font-semibold cursor-pointer">
 								<Plus className="size-4" />
 								Post New Update
 							</Button>
 						</DialogTrigger>
 						<DialogContent className="sm:max-w-xl">
 							<DialogHeader>
-								<DialogTitle className="flex items-center gap-2">
-									{/* <ChevronsUp className="size-5 text-primary" /> */}
+								<DialogTitle className="flex items-center gap-2 text-lg">
 									Post Changelog / Milestone Update
 								</DialogTitle>
 								<DialogDescription>
@@ -129,20 +106,30 @@ export default function ChangelogSection({
 							</DialogHeader>
 
 							<form action={handlePostSubmit} className="space-y-4 pt-2">
-								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								{state?.message && !state.success && (
+									<div className="p-3 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive flex items-start gap-2 text-xs">
+										<AlertCircle className="size-4 shrink-0 mt-0.5" />
+										<span>{state.message}</span>
+									</div>
+								)}
+
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 									<div className="space-y-1.5">
 										<Label htmlFor="version" className="text-xs font-semibold">
 											Version / Tag (Optional)
 										</Label>
 										<div className="relative">
-											<Tag className="size-3.5 absolute left-3 top-3 text-muted-foreground" />
+											<Tag className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
 											<Input
 												id="version"
 												name="version"
-												placeholder="e.g. v1.2.0, alpha-2"
+												placeholder="e.g. v2.1.0 or Alpha-3"
 												className="pl-8 text-sm"
 											/>
 										</div>
+										{versionErrors.length > 0 && (
+											<p className="text-xs text-destructive">{versionErrors.join(", ")}</p>
+										)}
 									</div>
 
 									<div className="space-y-1.5">
@@ -156,7 +143,7 @@ export default function ChangelogSection({
 													"fix",
 												] as const
 											).map((cat) => {
-												const config = CATEGORY_MAP[cat];
+												const config = CHANGELOG_CATEGORIES[cat];
 												const isSelected = selectedCategory === cat;
 												const Icon = config.icon;
 												return (
@@ -165,14 +152,14 @@ export default function ChangelogSection({
 														type="button"
 														onClick={() => setSelectedCategory(cat)}
 														className={cn(
-															"flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border cursor-pointer transition-all",
+															"flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer text-left",
 															isSelected
-																? "bg-primary text-primary-foreground border-primary"
-																: "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground",
+																? "bg-primary text-primary-foreground border-primary font-semibold shadow-xs"
+																: "bg-muted/50 border-transparent hover:bg-muted text-muted-foreground",
 														)}
 													>
-														<Icon className="size-3" />
-														<span>{config.label}</span>
+														<Icon className="size-3 shrink-0" />
+														<span className="truncate">{config.label}</span>
 													</button>
 												);
 											})}
@@ -182,61 +169,53 @@ export default function ChangelogSection({
 
 								<div className="space-y-1.5">
 									<Label htmlFor="title" className="text-xs font-semibold">
-										Update Headline *
+										Update Headline <span className="text-destructive">*</span>
 									</Label>
 									<Input
 										id="title"
 										name="title"
-										placeholder="e.g., Launched AI Summary & Dark Mode"
+										placeholder="e.g. Added real-time collaboration and dark mode"
 										required
-										className="text-sm"
+										className={cn("text-sm", titleErrors.length > 0 && "border-destructive")}
 									/>
-									{state?.errors?.title && (
-										<p className="text-xs text-destructive">
-											{state.errors.title[0]}
-										</p>
+									{titleErrors.length > 0 && (
+										<div className="flex items-center gap-1 text-xs text-destructive">
+											<AlertCircle className="size-3" />
+											<span>{titleErrors.join(", ")}</span>
+										</div>
 									)}
 								</div>
 
 								<div className="space-y-1.5">
 									<Label htmlFor="content" className="text-xs font-semibold">
-										What changed? (Details & Notes) *
+										Changelog Details / Description <span className="text-destructive">*</span>
 									</Label>
 									<Textarea
 										id="content"
 										name="content"
-										placeholder="Describe the new features, performance boosts, or milestone reached in detail..."
-										rows={5}
+										placeholder="Describe the changes, what's new, metrics achieved, or fixes deployed..."
+										rows={4}
 										required
-										className="text-sm resize-none"
+										className={cn("resize-none text-sm", contentErrors.length > 0 && "border-destructive")}
 									/>
-									{state?.errors?.content && (
-										<p className="text-xs text-destructive">
-											{state.errors.content[0]}
-										</p>
+									{contentErrors.length > 0 && (
+										<div className="flex items-center gap-1 text-xs text-destructive">
+											<AlertCircle className="size-3" />
+											<span>{contentErrors.join(", ")}</span>
+										</div>
 									)}
 								</div>
 
-								{state?.message && !state.success && (
-									<p className="text-xs text-destructive">{state.message}</p>
-								)}
-
-								<div className="flex justify-end gap-2 pt-4 border-t">
+								<div className="flex justify-end gap-2 pt-2">
 									<Button
 										type="button"
 										variant="outline"
-										size="sm"
-										disabled={isPending}
 										onClick={() => setIsOpen(false)}
+										disabled={isPending}
 									>
 										Cancel
 									</Button>
-									<Button
-										type="submit"
-										size="sm"
-										disabled={isPending}
-										className="gap-2"
-									>
+									<Button type="submit" disabled={isPending} className="gap-1.5">
 										{isPending ? (
 											<>
 												<Loader2 className="size-4 animate-spin" />
@@ -256,22 +235,23 @@ export default function ChangelogSection({
 				)}
 			</div>
 
-			{/* Changelog Timeline */}
+			{/* Changelog Timeline List */}
 			{updates.length === 0 ? (
 				<EmptyState
-					header="No changelog updates posted yet"
+					header="No Changelogs Published Yet"
 					message={
 						isMaker
-							? "Keep your community engaged by publishing product milestones, bug fixes, and feature releases."
-							: "The maker hasn't posted any development logs yet. Check back soon for new releases."
+							? "You haven't posted any updates yet. Click 'Post New Update' above to share your journey!"
+							: "The maker hasn't posted any changelog updates yet. Check back soon for new features and progress!"
 					}
 				/>
 			) : (
 				<div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-border">
 					{updates.map((update) => {
-						const catKey = (update.category || "feature") as keyof typeof CATEGORY_MAP;
-						const catConfig = CATEGORY_MAP[catKey] || CATEGORY_MAP.feature;
-						const Icon = catConfig.icon;
+						const config =
+							CHANGELOG_CATEGORIES[(update.category as ChangelogCategoryId) ?? "feature"] ??
+							CHANGELOG_CATEGORIES.feature;
+						const Icon = config.icon;
 
 						return (
 							<div key={update.id} className="relative group">
@@ -281,52 +261,51 @@ export default function ChangelogSection({
 								</div>
 
 								{/* Card Content */}
-								<div className="border rounded-lg p-4 bg-card/70 hover:bg-card transition-all shadow-xs space-y-3">
+								<div className="border rounded-lg p-4 bg-card/70 hover:bg-card transition-all space-y-2">
 									<div className="flex flex-wrap items-start justify-between gap-2">
 										<div className="space-y-1">
 											<div className="flex flex-wrap items-center gap-2">
+												<Badge
+													variant="outline"
+													className={cn(
+														"text-xs font-semibold px-2 py-0.5 gap-1",
+														config.color,
+													)}
+												>
+													<Icon className="size-3" />
+													{config.label}
+												</Badge>
+
 												{update.version && (
-													<Badge className="font-mono text-xs px-2 py-0.5">
+													<Badge
+														variant="secondary"
+														className="text-xs font-medium"
+													>
 														{update.version}
 													</Badge>
 												)}
-												<Badge
-													variant="outline"
-													className={cn("px-2 py-0.5", catConfig.color)}
-												>
-													<Icon className="size-3 mr-1" />
-													{catConfig.label}
-												</Badge>
+
+												<div className="flex items-center gap-1.5">
+													<Calendar className="size-3" />
+													<span className="text-xs text-muted-foreground">
+														{formatUpdateDate(update.createdAt)}
+													</span>
+												</div>
 											</div>
-											<h4 className="text-lg font-bold text-foreground">
-												{update.title}
-											</h4>
 										</div>
 
-										<div className="flex items-center gap-3">
-											<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-												<Calendar className="size-3" />
-												<span>
-													{new Intl.DateTimeFormat("en-US", {
-														month: "short",
-														day: "2-digit",
-														year: "numeric",
-													}).format(
-														new Date(
-															update.createdAt?.toISOString() ?? "",
-														),
-													)}
-												</span>
-											</div>
-
-											{isMaker && (
-												<DeleteUpdateButton updateId={update.id} />
-											)}
-										</div>
+										{isMaker && (
+											<DeleteUpdateButton updateId={update.id} />
+										)}
 									</div>
 
-									<div className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap pt-1 border-t border-border/40">
-										{update.content}
+									<div className="space-y-1.5">
+										<h4 className="font-bold text-base text-foreground">
+											{update.title}
+										</h4>
+										<p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+											{update.content}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -339,25 +318,25 @@ export default function ChangelogSection({
 }
 
 function DeleteUpdateButton({ updateId }: { updateId: number }) {
-	const [isDeleting, setIsDeleting] = useState(false);
-
 	const handleDelete = async () => {
-		if (!confirm("Are you sure you want to remove this changelog update?"))
-			return;
-		setIsDeleting(true);
 		await deleteChangelogAction(updateId);
-		setIsDeleting(false);
 	};
 
 	return (
-		<Button
-			variant="ghost"
-			size="icon"
-			onClick={handleDelete}
-			disabled={isDeleting}
-			className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-		>
-			<Trash2 className="size-3.5" />
-		</Button>
+		<DeleteConfirmDialog
+			onConfirm={handleDelete}
+			title="Delete Changelog Update?"
+			description="This action cannot be undone. This will permanently remove this update entry from the project timeline."
+			trigger={
+				<Button
+					variant="ghost"
+					size="icon"
+					className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+					title="Delete update"
+				>
+					<Trash2 className="size-3.5" />
+				</Button>
+			}
+		/>
 	);
 }

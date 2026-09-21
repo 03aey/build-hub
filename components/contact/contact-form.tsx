@@ -14,7 +14,7 @@ import {
 import { contactSubmissionsAction } from "@/lib/contact/contact-actions";
 import { cn } from "@/lib/utils";
 import { FormState } from "@/types";
-import { CheckCircle, Loader2Icon, SendHorizonal } from "lucide-react";
+import { AlertCircle, CheckCircle2, CircleCheckBig, Loader2Icon, SendHorizonal } from "lucide-react";
 import { useActionState, useState } from "react";
 import { FormField } from "../form/form-field";
 import { Label } from "../ui/label";
@@ -48,20 +48,22 @@ export function ContactForm() {
 
 	if (success) {
 		return (
-			<Card className="max-w-2xl mx-auto">
+			<Card className="max-w-2xl mx-auto border-primary/20 bg-primary/5 shadow-none">
 				<CardContent className="pt-6">
-					<div className="text-center py-8">
-						<CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
-						<h3 className="text-2xl font-semibold mb-2">
-							Thank You!
-						</h3>
-						<p className="text-muted-foreground">
-							Your message has been sent successfully. We&apos;ll
-							get back to you soon!
-						</p>
+					<div className="text-center py-8 space-y-4">
+						<CircleCheckBig className="size-8 md:size-10 text-muted-foreground/90 mx-auto" />
+						<div className="space-y-2">
+							<h3 className="text-2xl font-semibold">
+								Thank You for Reaching Out!
+							</h3>
+							<p className="text-muted-foreground text-sm max-w-md mx-auto leading-relaxed">
+								{message ||
+									"Your message has been sent successfully. We'll get back to you soon."}
+							</p>
+						</div>
 						<Button
 							onClick={() => window.location.reload()}
-							className="mt-4"
+							className="mt-2"
 						>
 							Send Another Message
 						</Button>
@@ -71,20 +73,21 @@ export function ContactForm() {
 		);
 	}
 
+	const reasonErrors = getFieldErrors("reason");
+
 	return (
 		<form action={formAction} className="space-y-6">
-			{message && (
+			{message && !success && (
 				<div
-					className={cn(
-						"p-4 rounded-lg border",
-						success
-							? "bg-primary/10 border-primary text-primary"
-							: "bg-destructive/10 border-destructive text-destructive",
-					)}
+					className="p-4 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive flex items-start gap-3"
 					role="alert"
 					aria-live="polite"
 				>
-					{message}
+					<AlertCircle className="size-5 shrink-0 mt-0.5" />
+					<div className="space-y-1 text-sm">
+						<p className="font-semibold">Message Submission Failed</p>
+						<p className="text-xs opacity-90">{message}</p>
+					</div>
 				</div>
 			)}
 
@@ -93,9 +96,8 @@ export function ContactForm() {
 					label="Name"
 					name="name"
 					id="name"
-					placeholder="Your name"
+					placeholder="Your full name"
 					required
-					onChange={() => {}}
 					error={getFieldErrors("name")}
 				/>
 				<FormField
@@ -104,7 +106,6 @@ export function ContactForm() {
 					id="email"
 					placeholder="your.email@example.com"
 					required
-					onChange={() => {}}
 					error={getFieldErrors("email")}
 				/>
 			</div>
@@ -113,35 +114,36 @@ export function ContactForm() {
 				label="Subject"
 				name="subject"
 				id="subject"
-				placeholder="I need help with..."
+				placeholder="Brief summary of your inquiry"
 				required
-				helperText="Briefly describe your request"
-				onChange={() => {}}
+				helperText="Summarize your message in a few words"
 				error={getFieldErrors("subject")}
 			/>
+
 			<FormField
 				label="Description"
 				name="description"
 				id="description"
-				placeholder="Tell us what you need help with..."
+				placeholder="Provide relevant details, reproduction steps, or context..."
 				required
-				helperText="Provide details about your request"
-				onChange={() => {}}
+				helperText="Provide comprehensive details to help us respond effectively"
 				error={getFieldErrors("description")}
 				textarea
 			/>
 
 			<input type="hidden" name="reason" value={reason} />
 
-			<div className="flex flex-col gap-2">
-				<Label htmlFor="reason">Reason for Contact</Label>
+			<div className="space-y-1.5">
+				<Label htmlFor="reason" className="text-sm font-medium">
+					Reason for Contact <span className="text-destructive">*</span>
+				</Label>
 
-				<Select onValueChange={(value) => setReason(value)}>
+				<Select onValueChange={(value) => setReason(value)} value={reason}>
 					<SelectTrigger
 						className={cn(
-							"w-full",
-							getFieldErrors("reason").length > 0 &&
-								"border-destructive focus:ring-destructive",
+							"w-full text-sm",
+							reasonErrors.length > 0 &&
+							"border-destructive focus:ring-destructive",
 						)}
 					>
 						<SelectValue placeholder="Select a reason" />
@@ -150,23 +152,20 @@ export function ContactForm() {
 					<SelectContent>
 						<SelectGroup>
 							<SelectLabel>Contact Reason</SelectLabel>
-
-							{contactReasons.map((reason) => (
-								<SelectItem
-									key={reason.value}
-									value={reason.value}
-								>
-									{reason.label}
+							{contactReasons.map((r) => (
+								<SelectItem key={r.value} value={r.value}>
+									{r.label}
 								</SelectItem>
 							))}
 						</SelectGroup>
 					</SelectContent>
 				</Select>
 
-				{getFieldErrors("reason").length > 0 && (
-					<p className="text-sm text-destructive">
-						{getFieldErrors("reason").join(", ")}
-					</p>
+				{reasonErrors.length > 0 && (
+					<div className="flex items-center gap-1.5 text-xs text-destructive mt-1">
+						<AlertCircle className="size-3.5 shrink-0" />
+						<span>{reasonErrors.join(", ")}</span>
+					</div>
 				)}
 			</div>
 
@@ -174,13 +173,16 @@ export function ContactForm() {
 				type="submit"
 				size="lg"
 				disabled={isPending}
-				className="w-full"
+				className="w-full font-semibold"
 			>
 				{isPending ? (
-					<Loader2Icon className="size-4 animate-spin" />
+					<>
+						<Loader2Icon className="size-4 animate-spin mr-2" />
+						Sending Message...
+					</>
 				) : (
 					<>
-						<SendHorizonal className="h-4 w-4 mr-2" />
+						<SendHorizonal className="size-4 mr-2" />
 						Send Message
 					</>
 				)}

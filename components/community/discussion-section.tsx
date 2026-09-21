@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteConfirmDialog from "@/components/common/delete-confirm-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,25 +9,22 @@ import {
 	deleteCommentAction,
 	upvoteCommentAction,
 } from "@/lib/community/community-actions";
-import { cn } from "@/lib/utils";
+import { DISCUSSION_CATEGORIES } from "@/lib/data/site-data";
+import { cn, formatTimeAgo } from "@/lib/utils";
 import { NestedCommentType } from "@/types";
 import { useAuth } from "@clerk/nextjs";
 import {
-	Bug,
+	AlertCircle,
 	ChevronDown,
 	CornerDownRight,
-	HelpCircle,
-	Lightbulb,
 	Loader2,
-	MessageSquare,
-	MessagesSquare,
 	Send,
 	Sparkles,
 	ThumbsUp,
 	Trash2,
-	User
+	User,
 } from "lucide-react";
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import EmptyState from "../common/empty-state";
 
 interface DiscussionSectionProps {
@@ -34,30 +32,6 @@ interface DiscussionSectionProps {
 	comments: NestedCommentType[];
 	isMaker: boolean;
 	productSlug: string;
-}
-
-const CATEGORIES = [
-	{ id: "all", label: "All Topics", icon: MessagesSquare },
-	{ id: "question", label: "Questions | Q&A", icon: HelpCircle, color: "text-blue-500 bg-blue-500/10 border-blue-500/20" },
-	{ id: "feedback", label: "Feedback & Ideas", icon: Lightbulb, color: "text-amber-500 bg-amber-500/10 border-amber-500/20" },
-	{ id: "bug", label: "Bug Reports", icon: Bug, color: "text-rose-500 bg-rose-500/10 border-rose-500/20" },
-	{ id: "general", label: "General Chat", icon: MessageSquare, color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" },
-];
-
-function formatTimeAgo(dateString?: string | Date | null) {
-	if (!dateString) return "Just now";
-	const date = new Date(dateString);
-	const now = new Date();
-	const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-	if (diffInSeconds < 60) return "Just now";
-	const diffInMinutes = Math.floor(diffInSeconds / 60);
-	if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-	const diffInHours = Math.floor(diffInMinutes / 60);
-	if (diffInHours < 24) return `${diffInHours}h ago`;
-	const diffInDays = Math.floor(diffInHours / 24);
-	if (diffInDays < 30) return `${diffInDays}d ago`;
-	return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
 }
 
 export default function DiscussionSection({
@@ -80,42 +54,56 @@ export default function DiscussionSection({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
-						{/* <MessageSquare className="size-5 text-primary" /> */}
 						<h3 className="text-xl font-bold">Community Discussion</h3>
-						{/* <Badge variant="secondary" className="text-xs">
-						{comments.length}
-					</Badge> */}
 					</div>
 					<p className="text-xs text-muted-foreground">
-						Ask questions, share feedback, and connect with other users.
+						Ask questions, report bugs, suggest features, or chat with the maker and community.
 					</p>
 				</div>
 
-				{/* Category Pill Filters */}
-				<div className="flex flex-wrap items-center gap-1.5">
-					{CATEGORIES.map((cat) => {
+				{/* Filter Pills */}
+				<div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+					{DISCUSSION_CATEGORIES.map((cat) => {
+						const isSelected = activeCategory === cat.id;
 						const Icon = cat.icon;
-						const isActive = activeCategory === cat.id;
+						const count =
+							cat.id === "all"
+								? comments.length
+								: comments.filter((c) => c.category === cat.id).length;
+
 						return (
 							<button
 								key={cat.id}
+								type="button"
 								onClick={() => setActiveCategory(cat.id)}
 								className={cn(
-									"flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer",
-									isActive
-										? "bg-primary text-primary-foreground shadow-xs"
-										: "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground",
+									"flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap cursor-pointer border",
+									isSelected
+										? "bg-primary text-primary-foreground border-primary shadow-xs"
+										: "bg-background text-muted-foreground hover:text-foreground hover:bg-muted border-border/60",
 								)}
 							>
 								<Icon className="size-3.5" />
 								<span>{cat.label}</span>
+								{count > 0 && (
+									<span
+										className={cn(
+											"text-[10px] px-1.5 py-0.2 rounded-full",
+											isSelected
+												? "bg-primary-foreground/20 text-primary-foreground font-bold"
+												: "bg-muted text-muted-foreground",
+										)}
+									>
+										{count}
+									</span>
+								)}
 							</button>
 						);
 					})}
 				</div>
 			</div>
 
-			{/* Main Comment Creation Box */}
+			{/* Main New Comment Box */}
 			{isSignedIn ? (
 				<CommentForm
 					productId={productId}
@@ -127,42 +115,50 @@ export default function DiscussionSection({
 					}
 				/>
 			) : (
-				<div className="p-4 py-8 rounded-lg border bg-muted/30 text-center space-y-2">
-					<p className="text-sm font-medium">Join the discussion</p>
-					<p className="text-xs text-muted-foreground">
-						Sign in to ask questions, suggest improvements, and connect with makers.
+				<div className="rounded-lg border border-dashed p-6 text-center bg-muted/20">
+					<p className="text-sm text-muted-foreground mb-3">
+						Sign in to ask questions, share feedback, report bugs, or participate in the discussion.
 					</p>
+					<Button asChild size="sm">
+						<a href="/sign-in">Sign In to Join Discussion</a>
+					</Button>
 				</div>
 			)}
 
-			{/* Comment Threads List */}
+			{/* Comments List */}
 			<div className="space-y-4">
-				{filteredComments.length === 0 ? (
-					<EmptyState
-						header="No discussions yet"
-						message={activeCategory === "all"
-							? "Be the first to start a conversation, ask a question, or leave feedback."
-							: `No discussions found under "${CATEGORIES.find((c) => c.id === activeCategory)?.label}".`}
-					/>
-				) : (
+				{filteredComments.length > 0 ? (
 					filteredComments.map((comment) => (
 						<CommentItem
 							key={comment.id}
 							comment={comment}
 							productId={productId}
 							currentUserId={userId}
-							isProductMaker={isMaker}
+							isMaker={isMaker}
 							replyingToId={replyingToId}
 							setReplyingToId={setReplyingToId}
 						/>
 					))
+				) : (
+					<EmptyState
+						header={
+							activeCategory === "all"
+								? "No discussions yet"
+								: `No ${DISCUSSION_CATEGORIES.find((c) => c.id === activeCategory)?.label.toLowerCase()} yet`
+						}
+						message={
+							activeCategory === "all"
+								? "Be the first one to start a discussion or ask a question about this project!"
+								: `No threads found in this category. Be the first to start one!`
+						}
+					/>
 				)}
 			</div>
 		</div>
 	);
 }
 
-// ---------------- Comment Form ----------------
+// ---------------- Comment Form Component ----------------
 function CommentForm({
 	productId,
 	parentId,
@@ -183,6 +179,13 @@ function CommentForm({
 	});
 	const [content, setContent] = useState("");
 
+	useEffect(() => {
+		if (state.success) {
+			setContent("");
+			onSuccess();
+		}
+	}, [state.success, onSuccess]);
+
 	const handleSubmit = async (formData: FormData) => {
 		if (!content.trim()) return;
 		formData.set("content", content);
@@ -190,21 +193,16 @@ function CommentForm({
 		if (parentId) formData.set("parentId", parentId.toString());
 		formData.set("productId", productId.toString());
 		formAction(formData);
-		setContent("");
-		onSuccess();
 	};
 
 	return (
-		<form action={handleSubmit} className="border rounded-lg p-4 bg-background shadow-xs space-y-3">
+		<form
+			action={handleSubmit}
+			className="border rounded-lg p-4 bg-background shadow-xs space-y-3"
+		>
 			{!parentId && (
 				<div className="flex flex-wrap items-center gap-2 pb-2 border-b">
-					<span className="text-xs font-semibold text-muted-foreground">Type:</span>
-					{[
-						{ id: "general", label: "General", icon: MessageSquare },
-						{ id: "question", label: "Question", icon: HelpCircle },
-						{ id: "feedback", label: "Feedback", icon: Lightbulb },
-						{ id: "bug", label: "Bug Report", icon: Bug },
-					].map((t) => {
+					{DISCUSSION_CATEGORIES.filter((c) => c.id !== "all").map((t) => {
 						const isSelected = category === t.id;
 						const Icon = t.icon;
 						return (
@@ -215,7 +213,7 @@ function CommentForm({
 								className={cn(
 									"flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer transition-colors",
 									isSelected
-										? "bg-primary text-primary-foreground"
+										? "bg-primary text-primary-foreground font-semibold"
 										: "bg-muted text-muted-foreground hover:text-foreground",
 								)}
 							>
@@ -233,12 +231,18 @@ function CommentForm({
 				placeholder={placeholder}
 				rows={parentId ? 2 : 3}
 				maxLength={2000}
-				className="resize-none text-sm border-0 focus-visible:ring-0 p-0 shadow-none"
+				className={cn(
+					"resize-none text-sm border-0 focus-visible:ring-0 p-0 shadow-none",
+					state?.errors?.content && "border-destructive",
+				)}
 				required
 			/>
 
 			{state?.message && !state.success && (
-				<p className="text-sm text-destructive">{state.message}</p>
+				<div className="flex items-center gap-1.5 text-xs text-destructive pt-1">
+					<AlertCircle className="size-3.5 shrink-0" />
+					<span>{state.message}</span>
+				</div>
 			)}
 
 			<div className="flex items-center justify-between pt-2 border-t text-xs text-muted-foreground">
@@ -260,16 +264,16 @@ function CommentForm({
 						type="submit"
 						size="sm"
 						disabled={isPending || !content.trim()}
-						className="h-8 gap-1.5 text-xs"
+						className="h-8 gap-1.5 text-xs font-semibold cursor-pointer"
 					>
 						{isPending ? (
 							<>
-								<Loader2 className="size-3 animate-spin" />
-								Posting...
+								<Loader2 className="size-3.5 mr-1 animate-spin" />
+								{parentId ? "Replying..." : "Posting..."}
 							</>
 						) : (
 							<>
-								<Send className="size-3" />
+								<Send className="size-3.5 mr-1" />
 								{parentId ? "Post Reply" : "Post Comment"}
 							</>
 						)}
@@ -280,12 +284,12 @@ function CommentForm({
 	);
 }
 
-// ---------------- Comment Item ----------------
+// ---------------- Comment Item Component ----------------
 function CommentItem({
 	comment,
 	productId,
 	currentUserId,
-	isProductMaker,
+	isMaker,
 	replyingToId,
 	setReplyingToId,
 	isReply = false,
@@ -293,25 +297,26 @@ function CommentItem({
 	comment: NestedCommentType;
 	productId: number;
 	currentUserId?: string | null;
-	isProductMaker: boolean;
+	isMaker: boolean;
 	replyingToId: number | null;
 	setReplyingToId: (id: number | null) => void;
 	isReply?: boolean;
 }) {
-	const [upvotes, setUpvotes] = useState(comment.upvotes || 0);
+	const [upvotes, setUpvotes] = useState(comment.upvotes);
 	const [hasUpvoted, setHasUpvoted] = useState(
 		Boolean(currentUserId && comment.upvotedBy?.includes(currentUserId)),
 	);
 	const [isPendingVote, startTransition] = useTransition();
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [isCollapsed, setIsCollapsed] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-	const isAuthor = currentUserId === comment.userId;
-	const canDelete = isAuthor || isProductMaker;
 	const isMakerComment = comment.userRole === "maker";
+	const isCommentOwner = currentUserId && comment.userId === currentUserId;
+	const canDelete = isCommentOwner || isMaker;
 
 	const handleUpvote = () => {
-		if (!currentUserId) return;
+		if (!currentUserId || isPendingVote) return;
 		startTransition(async () => {
 			const nextState = !hasUpvoted;
 			setHasUpvoted(nextState);
@@ -321,13 +326,18 @@ function CommentItem({
 	};
 
 	const handleDelete = async () => {
-		if (!confirm("Are you sure you want to delete this comment?")) return;
-		setIsDeleting(true);
-		await deleteCommentAction(comment.id);
-		setIsDeleting(false);
+		try {
+			setIsDeleting(true);
+			await deleteCommentAction(comment.id);
+			setDeleteDialogOpen(false);
+		} catch (error) {
+			console.error("Failed to delete comment:", error);
+		} finally {
+			setIsDeleting(false);
+		}
 	};
 
-	const categoryConfig = CATEGORIES.find((c) => c.id === comment.category);
+	const categoryConfig = DISCUSSION_CATEGORIES.find((c) => c.id === comment.category);
 
 	return (
 		<div
@@ -352,7 +362,7 @@ function CommentItem({
 							<User className="size-4 text-muted-foreground" />
 						)}
 					</div>
-					<div>
+					<div className="space-y-1">
 						<div className="flex items-center gap-2">
 							<span className="font-semibold text-sm">
 								{comment.userName}
@@ -369,7 +379,12 @@ function CommentItem({
 							{categoryConfig && categoryConfig.id !== "general" && (
 								<>
 									<span>•</span>
-									<span className={cn("px-1.5 py-0.2 rounded font-medium", categoryConfig.color)}>
+									<span
+										className={cn(
+											"px-1.5 py-0.2 rounded font-medium",
+											categoryConfig.color,
+										)}
+									>
 										{categoryConfig.label}
 									</span>
 								</>
@@ -378,17 +393,25 @@ function CommentItem({
 					</div>
 				</div>
 
-				{/* Actions (Delete) */}
+				{/* Reusable Delete Confirmation Dialog */}
 				{canDelete && (
-					<Button
-						variant="ghost"
-						size="icon"
-						onClick={handleDelete}
-						disabled={isDeleting}
-						className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-					>
-						<Trash2 className="size-3.5" />
-					</Button>
+					<DeleteConfirmDialog
+						open={deleteDialogOpen}
+						onOpenChange={setDeleteDialogOpen}
+						onConfirm={handleDelete}
+						title={`Delete this ${isReply ? "reply" : "comment"}?`}
+						description={`This action cannot be undone. This will permanently delete this discussion comment${!isReply ? " and any replies underneath it." : "."}`}
+						trigger={
+							<Button
+								variant="ghost"
+								size="icon"
+								className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+								title="Delete comment"
+							>
+								<Trash2 className="size-3.5" />
+							</Button>
+						}
+					/>
 				)}
 			</div>
 
@@ -411,7 +434,9 @@ function CommentItem({
 					)}
 					disabled={isPendingVote || !currentUserId}
 				>
-					<ThumbsUp className={cn("size-3.5", hasUpvoted && "fill-primary")} />
+					<ThumbsUp
+						className={cn("size-3.5", hasUpvoted && "fill-primary")}
+					/>
 					<span>{upvotes}</span>
 				</button>
 
@@ -436,8 +461,16 @@ function CommentItem({
 						onClick={() => setIsCollapsed(!isCollapsed)}
 						className="ml-auto text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs cursor-pointer font-medium"
 					>
-						<span>{comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}</span>
-						<ChevronDown className={cn("size-3 transition-transform", isCollapsed && "-rotate-90")} />
+						<span>
+							{comment.replies.length}{" "}
+							{comment.replies.length === 1 ? "reply" : "replies"}
+						</span>
+						<ChevronDown
+							className={cn(
+								"size-3 transition-transform",
+								isCollapsed && "-rotate-90",
+							)}
+						/>
 					</button>
 				)}
 			</div>
@@ -464,7 +497,7 @@ function CommentItem({
 							comment={reply}
 							productId={productId}
 							currentUserId={currentUserId}
-							isProductMaker={isProductMaker}
+							isMaker={isMaker}
 							replyingToId={replyingToId}
 							setReplyingToId={setReplyingToId}
 							isReply={true}

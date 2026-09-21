@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { comments, productReviews, productUpdates, products } from "@/db/schema";
+import { comments, productReviews, productUpdates } from "@/db/schema";
 import {
 	CommentType,
 	NestedCommentType,
@@ -97,7 +97,13 @@ export async function getProductReviewsWithStats(productId: number): Promise<{
 		let sumRating = 0;
 		let sumUx = 0;
 		let sumPricing = 0;
-		const distribution: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+		const distribution: Record<number, number> = {
+			5: 0,
+			4: 0,
+			3: 0,
+			2: 0,
+			1: 0,
+		};
 
 		for (const r of reviews) {
 			sumRating += r.rating;

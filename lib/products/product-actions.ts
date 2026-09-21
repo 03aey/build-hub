@@ -12,15 +12,14 @@ import { productSchema } from "./product-validations";
 export const addProductAction = async (
 	prevState: FormState,
 	formData: FormData,
-) => {
+): Promise<FormState> => {
 	try {
 		const { userId, orgId } = await auth();
 
 		if (!userId) {
 			return {
 				success: false,
-				message: "You must be signed in to submit a product",
-				errors: undefined,
+				message: "You must be signed in to submit a product.",
 			};
 		}
 
@@ -28,8 +27,7 @@ export const addProductAction = async (
 			return {
 				success: false,
 				message:
-					"You must be a member of an organization to submit a product",
-				errors: undefined,
+					"You must be a member of an active organization to submit a product.",
 			};
 		}
 
@@ -38,58 +36,84 @@ export const addProductAction = async (
 			user?.primaryEmailAddress?.emailAddress || "anonymous";
 
 		const rawFormData = Object.fromEntries(formData.entries());
-
 		const validatedData = productSchema.safeParse(rawFormData);
 
 		if (!validatedData.success) {
-			console.log(validatedData.error.flatten().fieldErrors);
 			return {
 				success: false,
 				errors: validatedData.error.flatten().fieldErrors,
-				message: "Invalid data",
+				message: "Please fix the validation errors below and try again.",
 			};
 		}
+
 		const { name, slug, tagline, description, websiteUrl, tags } =
 			validatedData.data;
 
-		const tagsArray = tags
-			? tags.filter((tag) => typeof tag === "string")
-			: [];
+		// Check for slug uniqueness
+		const [existingSlug] = await db
+			.select({ id: products.id })
+			.from(products)
+			.where(eq(products.slug, slug))
+			.limit(1);
+
+		if (existingSlug) {
+			return {
+				success: false,
+				errors: {
+					slug: [
+						"A product with this slug already exists. Please choose a unique slug.",
+					],
+				},
+				message: "This product slug is already taken. Please choose another one.",
+			};
+		}
 
 		await db.insert(products).values({
 			name,
 			slug,
 			tagline,
-			description,
+			description: description || null,
 			websiteUrl,
-			tags: tagsArray,
+			tags,
 			status: "pending",
 			submittedBy: userEmail,
 			organizationId: orgId,
 			userId,
 		});
 
+		revalidatePath("/");
+		revalidatePath("/explore");
+
 		return {
 			success: true,
 			message:
-				"Product submitted successfully! It will be reviewed shortly.",
-			errors: undefined,
+				"Product submitted successfully. Your submission will be reviewed by administrators shortly.",
 		};
-	} catch (error) {
-		console.error(error);
+	} catch (error: any) {
+		console.error("Error submitting product:", error);
+
+		// Handle Postgres unique constraint violation
+		if (error?.code === "23505" || error?.message?.includes("unique")) {
+			return {
+				success: false,
+				errors: {
+					slug: ["A product with this slug already exists. Please choose a unique slug."],
+				},
+				message: "A product with this slug already exists.",
+			};
+		}
 
 		if (error instanceof z.ZodError) {
 			return {
 				success: false,
 				errors: error.flatten().fieldErrors,
-				message: "Validation failed. Please check the form.",
+				message: "Validation failed. Please check your inputs.",
 			};
 		}
 
 		return {
 			success: false,
-			errors: undefined,
-			message: "Failed to submit product",
+			message: "Failed to submit product due to a server error. Please try again later.",
 		};
 	}
 };

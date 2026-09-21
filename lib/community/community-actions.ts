@@ -25,7 +25,7 @@ export async function addCommentAction(
 		if (!userId) {
 			return {
 				success: false,
-				message: "You must be signed in to post a comment",
+				message: "You must be signed in to post a comment or join the discussion.",
 			};
 		}
 
@@ -34,10 +34,14 @@ export async function addCommentAction(
 		const validated = commentSchema.safeParse(rawData);
 
 		if (!validated.success) {
+			const fieldErrors = validated.error.flatten().fieldErrors;
+			const firstError =
+				Object.values(fieldErrors).flat()[0] ||
+				"Please enter a valid comment (2–2000 characters).";
 			return {
 				success: false,
-				errors: validated.error.flatten().fieldErrors,
-				message: `${validated.error.flatten().fieldErrors.content?.[0]}` || "Please fill out all required fields properly",
+				errors: fieldErrors,
+				message: firstError,
 			};
 		}
 
@@ -51,7 +55,7 @@ export async function addCommentAction(
 			.limit(1);
 
 		if (!product) {
-			return { success: false, message: "Product not found" };
+			return { success: false, message: "Product not found." };
 		}
 
 		// Check if current user is the maker of the product
@@ -65,7 +69,7 @@ export async function addCommentAction(
 			user?.username ||
 			user?.firstName ||
 			user?.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-			"Maker";
+			"Community Member";
 		const userAvatar = user?.imageUrl || null;
 		const userRole = isMaker ? "maker" : "user";
 
@@ -93,7 +97,7 @@ export async function addCommentAction(
 		console.error("Error adding comment:", error);
 		return {
 			success: false,
-			message: "Failed to post comment. Please try again.",
+			message: "Failed to post comment due to a server error. Please try again.",
 		};
 	}
 }
@@ -102,7 +106,7 @@ export async function upvoteCommentAction(commentId: number) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return { success: false, message: "Please sign in to upvote" };
+			return { success: false, message: "Please sign in to upvote." };
 		}
 
 		const [comment] = await db
@@ -112,7 +116,7 @@ export async function upvoteCommentAction(commentId: number) {
 			.limit(1);
 
 		if (!comment) {
-			return { success: false, message: "Comment not found" };
+			return { success: false, message: "Comment not found." };
 		}
 
 		const upvotedBy = comment.upvotedBy ?? [];
@@ -151,7 +155,7 @@ export async function upvoteCommentAction(commentId: number) {
 		return { success: true, isUpvoted: !hasUpvoted };
 	} catch (error) {
 		console.error("Error upvoting comment:", error);
-		return { success: false, message: "Failed to upvote" };
+		return { success: false, message: "Failed to upvote." };
 	}
 }
 
@@ -159,7 +163,7 @@ export async function deleteCommentAction(commentId: number) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return { success: false, message: "Unauthorized" };
+			return { success: false, message: "Unauthorized. Please sign in." };
 		}
 
 		const [comment] = await db
@@ -169,7 +173,7 @@ export async function deleteCommentAction(commentId: number) {
 			.limit(1);
 
 		if (!comment) {
-			return { success: false, message: "Comment not found" };
+			return { success: false, message: "Comment not found." };
 		}
 
 		const [product] = await db
@@ -183,7 +187,7 @@ export async function deleteCommentAction(commentId: number) {
 		const isMaker = product?.userId === userId;
 
 		if (!isOwner && !isMaker) {
-			return { success: false, message: "Not permitted to delete" };
+			return { success: false, message: "You do not have permission to delete this comment." };
 		}
 
 		// Delete comment and its replies
@@ -194,10 +198,10 @@ export async function deleteCommentAction(commentId: number) {
 			revalidatePath(`/products/${product.slug}`);
 		}
 
-		return { success: true, message: "Comment deleted" };
+		return { success: true, message: "Comment deleted successfully." };
 	} catch (error) {
 		console.error("Error deleting comment:", error);
-		return { success: false, message: "Failed to delete comment" };
+		return { success: false, message: "Failed to delete comment." };
 	}
 }
 
@@ -214,7 +218,7 @@ export async function addChangelogAction(
 		if (!userId) {
 			return {
 				success: false,
-				message: "You must be signed in to post a changelog update",
+				message: "You must be signed in to post a changelog update.",
 			};
 		}
 
@@ -222,10 +226,14 @@ export async function addChangelogAction(
 		const validated = updateSchema.safeParse(rawData);
 
 		if (!validated.success) {
+			const fieldErrors = validated.error.flatten().fieldErrors;
+			const firstError =
+				Object.values(fieldErrors).flat()[0] ||
+				"Please fill out all required changelog fields properly.";
 			return {
 				success: false,
-				errors: validated.error.flatten().fieldErrors,
-				message: validated.error.flatten().fieldErrors.content?.[0] || "Please fill out all required fields",
+				errors: fieldErrors,
+				message: firstError,
 			};
 		}
 
@@ -238,7 +246,7 @@ export async function addChangelogAction(
 			.limit(1);
 
 		if (!product) {
-			return { success: false, message: "Product not found" };
+			return { success: false, message: "Product not found." };
 		}
 
 		const user = await currentUser();
@@ -250,7 +258,7 @@ export async function addChangelogAction(
 		if (!isMaker) {
 			return {
 				success: false,
-				message: "Only the creator of this product can post changelog updates",
+				message: "Only the verified maker of this product can publish changelog updates.",
 			};
 		}
 
@@ -272,7 +280,7 @@ export async function addChangelogAction(
 		console.error("Error adding changelog:", error);
 		return {
 			success: false,
-			message: "Failed to post changelog update",
+			message: "Failed to post changelog update due to a server error.",
 		};
 	}
 }
@@ -281,7 +289,7 @@ export async function deleteChangelogAction(updateId: number) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return { success: false, message: "Unauthorized" };
+			return { success: false, message: "Unauthorized. Please sign in." };
 		}
 
 		const [update] = await db
@@ -291,7 +299,7 @@ export async function deleteChangelogAction(updateId: number) {
 			.limit(1);
 
 		if (!update) {
-			return { success: false, message: "Update not found" };
+			return { success: false, message: "Changelog update not found." };
 		}
 
 		const [product] = await db
@@ -301,7 +309,7 @@ export async function deleteChangelogAction(updateId: number) {
 			.limit(1);
 
 		if (update.userId !== userId && product?.userId !== userId) {
-			return { success: false, message: "Permission denied" };
+			return { success: false, message: "Permission denied. Only the author can delete this update." };
 		}
 
 		await db.delete(productUpdates).where(eq(productUpdates.id, updateId));
@@ -310,10 +318,10 @@ export async function deleteChangelogAction(updateId: number) {
 			revalidatePath(`/products/${product.slug}`);
 		}
 
-		return { success: true, message: "Update removed successfully" };
+		return { success: true, message: "Changelog update removed successfully." };
 	} catch (error) {
 		console.error("Error deleting update:", error);
-		return { success: false, message: "Failed to delete update" };
+		return { success: false, message: "Failed to delete changelog update." };
 	}
 }
 
@@ -330,7 +338,7 @@ export async function addReviewAction(
 		if (!userId) {
 			return {
 				success: false,
-				message: "You must be signed in to submit a review",
+				message: "You must be signed in to submit a review.",
 			};
 		}
 
@@ -339,10 +347,14 @@ export async function addReviewAction(
 		const validated = reviewSchema.safeParse(rawData);
 
 		if (!validated.success) {
+			const fieldErrors = validated.error.flatten().fieldErrors;
+			const firstError =
+				Object.values(fieldErrors).flat()[0] ||
+				"Please complete all required review fields.";
 			return {
 				success: false,
-				errors: validated.error.flatten().fieldErrors,
-				message: "Please complete all review fields properly",
+				errors: fieldErrors,
+				message: firstError,
 			};
 		}
 
@@ -364,7 +376,7 @@ export async function addReviewAction(
 			.limit(1);
 
 		if (!product) {
-			return { success: false, message: "Product not found" };
+			return { success: false, message: "Product not found." };
 		}
 
 		const userName =
@@ -404,7 +416,7 @@ export async function addReviewAction(
 			revalidatePath(`/products/${product.slug}`);
 			return {
 				success: true,
-				message: "Your review has been updated!",
+				message: "Your review has been updated successfully!",
 			};
 		}
 
@@ -426,13 +438,13 @@ export async function addReviewAction(
 		revalidatePath(`/products/${product.slug}`);
 		return {
 			success: true,
-			message: "Thank you for your structured review & feedback!",
+			message: "Thank you for your review and feedback!",
 		};
 	} catch (error) {
 		console.error("Error adding review:", error);
 		return {
 			success: false,
-			message: "Failed to submit review. Please try again.",
+			message: "Failed to submit review due to a server error. Please try again.",
 		};
 	}
 }
@@ -441,7 +453,7 @@ export async function deleteReviewAction(reviewId: number) {
 	try {
 		const { userId } = await auth();
 		if (!userId) {
-			return { success: false, message: "Unauthorized" };
+			return { success: false, message: "Unauthorized. Please sign in." };
 		}
 
 		const [review] = await db
@@ -451,11 +463,11 @@ export async function deleteReviewAction(reviewId: number) {
 			.limit(1);
 
 		if (!review) {
-			return { success: false, message: "Review not found" };
+			return { success: false, message: "Review not found." };
 		}
 
 		if (review.userId !== userId) {
-			return { success: false, message: "Permission denied" };
+			return { success: false, message: "Permission denied. You can only delete your own reviews." };
 		}
 
 		const [product] = await db
@@ -470,9 +482,9 @@ export async function deleteReviewAction(reviewId: number) {
 			revalidatePath(`/products/${product.slug}`);
 		}
 
-		return { success: true, message: "Review removed" };
+		return { success: true, message: "Review removed successfully." };
 	} catch (error) {
 		console.error("Error deleting review:", error);
-		return { success: false, message: "Failed to delete review" };
+		return { success: false, message: "Failed to delete review." };
 	}
 }
