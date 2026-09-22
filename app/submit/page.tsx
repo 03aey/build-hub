@@ -1,6 +1,5 @@
 import SectionHeader from "@/components/common/section-header";
 import ProductSubmitForm from "@/components/products/product-submit-form";
-import { Cctv } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,12 +10,11 @@ export const metadata: Metadata = {
 
 export default function SubmitPage() {
 	return (
-		<section className="py-20 pt-10">
+		<section className="pb-20 pt-4">
 			<div className="wrapper">
-				<div className="mb-12">
+				<div className="mb-8">
 					<SectionHeader
 						title="Submit Your Product"
-						icon={Cctv}
 						description="Share your creation with the community. Your submission will be reviewed before going live."
 					/>
 				</div>

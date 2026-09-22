@@ -14,7 +14,7 @@ import {
 import { contactSubmissionsAction } from "@/lib/contact/contact-actions";
 import { cn } from "@/lib/utils";
 import { FormState } from "@/types";
-import { AlertCircle, CheckCircle2, CircleCheckBig, Loader2Icon, SendHorizonal } from "lucide-react";
+import { AlertCircle, CircleCheckBig, Loader2Icon, SendHorizonal } from "lucide-react";
 import { useActionState, useState } from "react";
 import { FormField } from "../form/form-field";
 import { Label } from "../ui/label";

@@ -1,12 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	FolderGit2,
-	Forward,
-	HatGlasses,
-	Shredder,
-	UsersIcon
-} from "lucide-react";
+import { HERO_STATS } from "@/lib/data/site-data";
+import { Forward, Shredder } from "lucide-react";
 import Link from "next/link";
 import StatsCard from "./stats-card";
 
@@ -26,25 +21,6 @@ const LiveBadge = () => {
 		</Badge>
 	);
 };
-
-const statsData = [
-	{
-		icon: FolderGit2,
-		value: "1.4K+",
-		label: "Projects Shared",
-	},
-	{
-		icon: UsersIcon,
-		value: "7K+",
-		label: "Active Creators",
-		hasBorder: true,
-	},
-	{
-		icon: HatGlasses,
-		value: "43K+",
-		label: "Monthly Visitors",
-	},
-];
 
 export default function HeroSection() {
 	return (
@@ -93,7 +69,7 @@ export default function HeroSection() {
 					</div>
 
 					<div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-2xl w-full">
-						{statsData.map((stat) => (
+						{HERO_STATS.map((stat) => (
 							<StatsCard key={stat.label} {...stat} />
 						))}
 					</div>

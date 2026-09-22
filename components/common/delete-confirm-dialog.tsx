@@ -11,7 +11,6 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Loader2, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -60,12 +59,16 @@ export default function DeleteConfirmDialog({
 
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
-			{trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
+			{trigger && (
+				<AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+			)}
 
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{title}</AlertDialogTitle>
-					<AlertDialogDescription>{description}</AlertDialogDescription>
+					<AlertDialogDescription>
+						{description}
+					</AlertDialogDescription>
 				</AlertDialogHeader>
 
 				<AlertDialogFooter>

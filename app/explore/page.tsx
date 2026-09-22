@@ -3,7 +3,7 @@
 import SectionHeader from "@/components/common/section-header";
 import ProductExplorer from "@/components/products/product-explorer";
 import { getAllProducts } from "@/lib/products/product-select";
-import { Loader2, ZodiacAries } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -21,7 +21,6 @@ export default async function ExplorePage() {
 				<div className="mb-4">
 					<SectionHeader
 						title="Explore Products"
-						// icon={ZodiacAries}
 						description="Browse and discover amazing projects from our community"
 					/>
 				</div>

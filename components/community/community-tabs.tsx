@@ -9,14 +9,11 @@ import {
 	ReviewStatsType,
 } from "@/types";
 import {
-	History,
 	Logs,
 	MessageSquare,
-	Rocket,
-	Sparkles,
-	Star,
+	Star
 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import ChangelogSection from "./changelog-section";
 import DiscussionSection from "./discussion-section";
 import ReviewsSection from "./reviews-section";

@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -14,12 +13,7 @@ import {
 	ABOUT_STATS,
 	ABOUT_TECH_STACK,
 } from "@/lib/data/site-data";
-import {
-	CheckCircle2,
-	Compass,
-	Sparkles,
-	Users,
-} from "lucide-react";
+import { CheckCircle2, Compass, Sparkles, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -54,10 +48,11 @@ export default function AboutPage() {
 					</h1>
 
 					<p className="text-lg sm:text-xl text-muted-foreground max-w-4xl leading-relaxed">
-						We started BuildHub because product discovery was broken. No bot
-						upvotes, no pay-to-win hype, and no vanity metrics. Just real
-						creators showcasing live tools, collecting actionable feedback, and
-						building sustainable software together.
+						We started BuildHub because product discovery was
+						broken. No bot upvotes, no pay-to-win hype, and no
+						vanity metrics. Just real creators showcasing live
+						tools, collecting actionable feedback, and building
+						sustainable software together.
 					</p>
 
 					{/* Live Platform Stats */}
@@ -97,21 +92,25 @@ export default function AboutPage() {
 
 						<div className="space-y-2 text-muted-foreground leading-relaxed text-base">
 							<p>
-								As indie hackers and developers, we spent months building tools only to
-								watch traditional launch platforms get overrun by marketing bots,
-								syndicated upvote rings, and ephemeral launches that disappeared after
-								24 hours.
+								As indie hackers and developers, we spent months
+								building tools only to watch traditional launch
+								platforms get overrun by marketing bots,
+								syndicated upvote rings, and ephemeral launches
+								that disappeared after 24 hours.
 							</p>
 							<p>
-								Software doesn&apos;t end on launch day—it begins there. Builders need a
-								home to publish changelogs, receive genuine bug reports with
-								reproductions, collect constructive star ratings, and engage in
-								nested technical conversations with early adopters.
+								Software doesn&apos;t end on launch day—it
+								begins there. Builders need a home to publish
+								changelogs, receive genuine bug reports with
+								reproductions, collect constructive star
+								ratings, and engage in nested technical
+								conversations with early adopters.
 							</p>
 							<p className="font-medium text-foreground">
-								BuildHub is crafted to be that long-term launchpad: a community
-								where good work speaks for itself, and where builders help each
-								other ship better software.
+								BuildHub is crafted to be that long-term
+								launchpad: a community where good work speaks
+								for itself, and where builders help each other
+								ship better software.
 							</p>
 						</div>
 					</div>
@@ -136,7 +135,9 @@ export default function AboutPage() {
 										<div className="size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
 											<Icon className="size-5" />
 										</div>
-										<CardTitle className="text-xl">{principle.title}</CardTitle>
+										<CardTitle className="text-xl">
+											{principle.title}
+										</CardTitle>
 										<CardDescription className="text-sm leading-relaxed">
 											{principle.description}
 										</CardDescription>
@@ -168,7 +169,9 @@ export default function AboutPage() {
 										</span>
 										<Icon className="size-4 text-muted-foreground" />
 									</div>
-									<h3 className="font-bold text-base">{step.title}</h3>
+									<h3 className="font-bold text-base">
+										{step.title}
+									</h3>
 									<p className="text-xs text-muted-foreground leading-relaxed">
 										{step.description}
 									</p>
@@ -214,19 +217,29 @@ export default function AboutPage() {
 								Ready to share what you&apos;ve built?
 							</h2>
 							<p className="text-muted-foreground text-sm sm:text-base">
-								Join hundreds of developers showcasing real software and getting genuine feedback today.
+								Join hundreds of developers showcasing real
+								software and getting genuine feedback today.
 							</p>
 						</div>
 
 						<div className="flex flex-col sm:flex-row gap-3.5 pt-2">
-							<Button asChild size="lg" className="rounded-full px-8">
+							<Button
+								asChild
+								size="lg"
+								className="rounded-full px-8"
+							>
 								<Link href="/submit">
 									<Sparkles className="size-4 mr-2" />
 									Submit Your Project
 								</Link>
 							</Button>
 
-							<Button asChild variant="outline" size="lg" className="rounded-full px-8">
+							<Button
+								asChild
+								variant="outline"
+								size="lg"
+								className="rounded-full px-8"
+							>
 								<Link href="/explore">
 									<Compass className="size-4 mr-2" />
 									Explore Directory

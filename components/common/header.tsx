@@ -1,21 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { MAIN_NAV_ITEMS } from "@/lib/data/site-data";
+import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import {
 	Fuel,
-	HousePlug,
 	LineDotRightHorizontal,
 	LoaderIcon,
 	Menu,
 	SparklesIcon,
-	Telescope,
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import CustomUserButton from "./custom-user-button";
-import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const Logo = () => {
 	return (
@@ -32,7 +31,7 @@ export const Logo = () => {
 
 export default function Header() {
 	const [hasScrolled, setHasScrolled] = useState(false);
-	const scrollThreshold = 50;
+	const scrollThreshold = 20;
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -55,21 +54,19 @@ export default function Header() {
 					<Logo />
 
 					<nav className="hidden md:flex items-center gap-1">
-						<Link
-							href="/"
-							className="flex rounded-md items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:bg-muted/50"
-						>
-							<HousePlug className="size-4" />
-							Home
-						</Link>
-
-						<Link
-							href="/explore"
-							className="flex rounded-md items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:bg-muted/50"
-						>
-							<Telescope className="size-4" />
-							Explore
-						</Link>
+						{MAIN_NAV_ITEMS.map((item) => {
+							const Icon = item.icon;
+							return (
+								<Link
+									key={item.href}
+									href={item.href}
+									className="flex rounded-md items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:bg-muted/50"
+								>
+									{Icon && <Icon className="size-4" />}
+									{item.label}
+								</Link>
+							);
+						})}
 					</nav>
 
 					<div className="flex items-center gap-3">
@@ -90,7 +87,7 @@ export default function Header() {
 								</SignedOut>
 
 								<SignedIn>
-									<Button asChild>
+									<Button asChild size="sm">
 										<Link href="/submit">
 											<SparklesIcon className="size-4" />
 											Submit Project
@@ -115,21 +112,21 @@ export default function Header() {
 									className="flex flex-col gap-6 pt-10 px-4"
 								>
 									<nav className="flex flex-col gap-2">
-										<Link
-											href="/"
-											className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-										>
-											<HousePlug className="size-4" />
-											Home
-										</Link>
-
-										<Link
-											href="/explore"
-											className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-										>
-											<Telescope className="size-4" />
-											Explore
-										</Link>
+										{MAIN_NAV_ITEMS.map((item) => {
+											const Icon = item.icon;
+											return (
+												<Link
+													key={item.href}
+													href={item.href}
+													className="flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+												>
+													{Icon && (
+														<Icon className="size-4" />
+													)}
+													{item.label}
+												</Link>
+											);
+										})}
 									</nav>
 
 									<div className="border-t pt-6 flex flex-col gap-3">

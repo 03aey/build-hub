@@ -25,7 +25,7 @@ export default function EmptyState({
 				<Icon className="size-8 md:size-10 text-muted-foreground/90" />
 			) : <Sunrise className="size-8 md:size-10 text-muted-foreground/90" />}
 
-			<div className="space-y-1 max-w-sm mx-auto">
+			<div className="space-y-1 max-w-md mx-auto">
 				<h4 className="font-semibold text-base">{header}</h4>
 				<p className="text-sm text-muted-foreground">
 					{message}

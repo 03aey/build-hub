@@ -5,15 +5,10 @@ import { PRIVACY_TLDR_CARDS } from "@/lib/data/site-data";
 import {
 	CheckCircle2,
 	Database,
-	Eye,
 	Globe,
 	KeyRound,
-	Lock,
-	Mail,
 	MessageSquareLock,
-	Server,
-	ShieldAlert,
-	ShieldCheck,
+	ShieldCheck
 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -36,7 +31,8 @@ export default function PrivacyPage() {
 							className="px-3.5 py-1.5 rounded-full text-xs font-semibold gap-1.5 border-primary/30 bg-primary/10 text-primary"
 						>
 							<ShieldCheck className="size-3.5" />
-							Data Privacy & Transparency • Last Updated: March 2026
+							Data Privacy & Transparency • Last Updated: March
+							2026
 						</Badge>
 					</div>
 
@@ -62,7 +58,9 @@ export default function PrivacyPage() {
 									>
 										<Icon className="size-4.5" />
 									</div>
-									<CardTitle className="text-base">{card.title}</CardTitle>
+									<CardTitle className="text-base">
+										{card.title}
+									</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<p className="text-xs text-muted-foreground leading-relaxed">
@@ -86,7 +84,9 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
 							<p>
-								We only collect information strictly necessary to provide BuildHub&apos;s product discovery and community discussion features:
+								We only collect information strictly necessary
+								to provide BuildHub&apos;s product discovery and
+								community discussion features:
 							</p>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
 								<div className="p-4 rounded-lg border bg-background/50 space-y-1.5">
@@ -95,7 +95,10 @@ export default function PrivacyPage() {
 										Account & Auth Data
 									</h4>
 									<p className="text-xs">
-										When you log in via Clerk, we receive your primary email address, public profile name, and avatar image to authenticate your maker identity.
+										When you log in via Clerk, we receive
+										your primary email address, public
+										profile name, and avatar image to
+										authenticate your maker identity.
 									</p>
 								</div>
 
@@ -105,7 +108,9 @@ export default function PrivacyPage() {
 										Product Submissions
 									</h4>
 									<p className="text-xs">
-										Product name, tagline, description, website URL, and tags you provide when listing a project on BuildHub.
+										Product name, tagline, description,
+										website URL, and tags you provide when
+										listing a project on BuildHub.
 									</p>
 								</div>
 
@@ -115,7 +120,9 @@ export default function PrivacyPage() {
 										Community Contributions
 									</h4>
 									<p className="text-xs">
-										Discussions, bug reports, feature suggestions, maker changelogs, upvotes, and star rating reviews you author.
+										Discussions, bug reports, feature
+										suggestions, maker changelogs, upvotes,
+										and star rating reviews you author.
 									</p>
 								</div>
 
@@ -125,7 +132,10 @@ export default function PrivacyPage() {
 										Technical Telemetry
 									</h4>
 									<p className="text-xs">
-										IP address, browser type, and basic request headers collected solely for security rate limiting and preventing fraudulent upvoting bots.
+										IP address, browser type, and basic
+										request headers collected solely for
+										security rate limiting and preventing
+										fraudulent upvoting bots.
 									</p>
 								</div>
 							</div>
@@ -141,19 +151,40 @@ export default function PrivacyPage() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
-							<p>We process your data for the following legitimate purposes:</p>
+							<p>
+								We process your data for the following
+								legitimate purposes:
+							</p>
 							<ul className="space-y-1 list-disc pl-5">
 								<li>
-									<strong className="text-foreground">Product Presentation:</strong> Displaying your submitted products, tags, and maker profile across the BuildHub directory.
+									<strong className="text-foreground">
+										Product Presentation:
+									</strong>{" "}
+									Displaying your submitted products, tags,
+									and maker profile across the BuildHub
+									directory.
 								</li>
 								<li>
-									<strong className="text-foreground">Authentic Feedback System:</strong> Enabling nested comments, bug report tracking, and review score aggregation.
+									<strong className="text-foreground">
+										Authentic Feedback System:
+									</strong>{" "}
+									Enabling nested comments, bug report
+									tracking, and review score aggregation.
 								</li>
 								<li>
-									<strong className="text-foreground">Vote Verification:</strong> Preventing automated bot manipulation and ensuring fair community ranking.
+									<strong className="text-foreground">
+										Vote Verification:
+									</strong>{" "}
+									Preventing automated bot manipulation and
+									ensuring fair community ranking.
 								</li>
 								<li>
-									<strong className="text-foreground">Service Communications:</strong> Sending essential administrative emails regarding product approvals, security notices, or support inquiries.
+									<strong className="text-foreground">
+										Service Communications:
+									</strong>{" "}
+									Sending essential administrative emails
+									regarding product approvals, security
+									notices, or support inquiries.
 								</li>
 							</ul>
 						</CardContent>
@@ -169,7 +200,9 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
 							<p>
-								BuildHub partners with trusted cloud infrastructure providers that adhere to rigorous security and compliance standards:
+								BuildHub partners with trusted cloud
+								infrastructure providers that adhere to rigorous
+								security and compliance standards:
 							</p>
 							<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
 								<div className="p-3.5 rounded-lg border bg-background/50 space-y-1">
@@ -178,7 +211,8 @@ export default function PrivacyPage() {
 										Clerk Inc.
 									</div>
 									<p className="text-xs">
-										Handles secure authentication, session management, and OAuth integrations.
+										Handles secure authentication, session
+										management, and OAuth integrations.
 									</p>
 								</div>
 
@@ -188,7 +222,8 @@ export default function PrivacyPage() {
 										Neon Database
 									</div>
 									<p className="text-xs">
-										Provides encrypted serverless PostgreSQL cloud storage with automated backups.
+										Provides encrypted serverless PostgreSQL
+										cloud storage with automated backups.
 									</p>
 								</div>
 
@@ -198,7 +233,8 @@ export default function PrivacyPage() {
 										Vercel
 									</div>
 									<p className="text-xs">
-										Global Edge CDN hosting and SSL/TLS certificate termination.
+										Global Edge CDN hosting and SSL/TLS
+										certificate termination.
 									</p>
 								</div>
 							</div>
@@ -215,13 +251,28 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
 							<p>
-								We implement technical and organizational measures to safeguard your personal data, including:
+								We implement technical and organizational
+								measures to safeguard your personal data,
+								including:
 							</p>
 							<ul className="space-y-1 list-disc pl-5">
-								<li>End-to-end encryption in transit via modern TLS 1.3 cryptographic protocols.</li>
-								<li>Encrypted database storage at rest with strict least-privilege administrative access.</li>
-								<li>Continuous vulnerability scans and dependency patch management.</li>
-								<li>Zero storage of sensitive payment credentials or plaintext passwords.</li>
+								<li>
+									End-to-end encryption in transit via modern
+									TLS 1.3 cryptographic protocols.
+								</li>
+								<li>
+									Encrypted database storage at rest with
+									strict least-privilege administrative
+									access.
+								</li>
+								<li>
+									Continuous vulnerability scans and
+									dependency patch management.
+								</li>
+								<li>
+									Zero storage of sensitive payment
+									credentials or plaintext passwords.
+								</li>
 							</ul>
 						</CardContent>
 					</Card>
@@ -236,24 +287,46 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
 							<p>
-								Regardless of your location, BuildHub affords all users full control over their personal information:
+								Regardless of your location, BuildHub affords
+								all users full control over their personal
+								information:
 							</p>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
 								<div className="p-3 rounded-lg border bg-background/50">
-									<strong className="text-foreground text-sm block mb-1">Right to Access & Export:</strong>
-									<span className="text-xs">Request a machine-readable copy of your profile and submitted products.</span>
+									<strong className="text-foreground text-sm block mb-1">
+										Right to Access & Export:
+									</strong>
+									<span className="text-xs">
+										Request a machine-readable copy of your
+										profile and submitted products.
+									</span>
 								</div>
 								<div className="p-3 rounded-lg border bg-background/50">
-									<strong className="text-foreground text-sm block mb-1">Right to Rectify:</strong>
-									<span className="text-xs">Update your product details, descriptions, and tags at any time.</span>
+									<strong className="text-foreground text-sm block mb-1">
+										Right to Rectify:
+									</strong>
+									<span className="text-xs">
+										Update your product details,
+										descriptions, and tags at any time.
+									</span>
 								</div>
 								<div className="p-3 rounded-lg border bg-background/50">
-									<strong className="text-foreground text-sm block mb-1">Right to Erasure (Forget):</strong>
-									<span className="text-xs">Request the permanent deletion of your account and all associated submissions.</span>
+									<strong className="text-foreground text-sm block mb-1">
+										Right to Erasure (Forget):
+									</strong>
+									<span className="text-xs">
+										Request the permanent deletion of your
+										account and all associated submissions.
+									</span>
 								</div>
 								<div className="p-3 rounded-lg border bg-background/50">
-									<strong className="text-foreground text-sm block mb-1">Right to Restrict Processing:</strong>
-									<span className="text-xs">Unpublish or hide your product listings from public discovery indices.</span>
+									<strong className="text-foreground text-sm block mb-1">
+										Right to Restrict Processing:
+									</strong>
+									<span className="text-xs">
+										Unpublish or hide your product listings
+										from public discovery indices.
+									</span>
 								</div>
 							</div>
 						</CardContent>
@@ -269,17 +342,29 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className="space-y-2 text-sm leading-relaxed text-muted-foreground">
 							<p>
-								If you have questions, inquiries regarding this Privacy Policy, or wish to exercise your data protection rights, please contact our team:
+								If you have questions, inquiries regarding this
+								Privacy Policy, or wish to exercise your data
+								protection rights, please contact our team:
 							</p>
 							<div className="flex flex-wrap items-center gap-4 pt-1">
 								<div className="p-3 rounded-lg border bg-card/80 text-xs space-y-1 w-50">
-									<span className="text-muted-foreground block">Email Support:</span>
-									<span className="font-semibold text-foreground">yalok6321@gmail.com</span>
+									<span className="text-muted-foreground block">
+										Email Support:
+									</span>
+									<span className="font-semibold text-foreground">
+										yalok6321@gmail.com
+									</span>
 								</div>
 								<div className="p-3 rounded-lg border bg-card/80 text-xs space-y-1 w-75">
-									<span className="text-muted-foreground block">Interactive Help Desk:</span>
-									<Link href="/contact" className="font-semibold text-primary hover:underline">
-										Submit a message on our Contact Page &rarr;
+									<span className="text-muted-foreground block">
+										Interactive Help Desk:
+									</span>
+									<Link
+										href="/contact"
+										className="font-semibold text-primary hover:underline"
+									>
+										Submit a message on our Contact Page
+										&rarr;
 									</Link>
 								</div>
 							</div>

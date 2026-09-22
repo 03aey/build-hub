@@ -14,6 +14,7 @@ import {
 	getAllProducts,
 	getProductBySlug,
 } from "@/lib/products/product-select";
+import { formatDate } from "@/lib/utils";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import {
 	ChevronsUp,
@@ -93,7 +94,7 @@ async function ProductContent({
 		(product.userId === userId ||
 			(product.submittedBy &&
 				user?.primaryEmailAddress?.emailAddress ===
-				product.submittedBy)),
+					product.submittedBy)),
 	);
 
 	// Fetch community data
@@ -106,8 +107,8 @@ async function ProductContent({
 	const { name, description, websiteUrl, tags, voteCount, tagline } = product;
 
 	return (
-		<div className="py-12 min-h-screen">
-			<div className="wrapper space-y-10">
+		<div className="pb-12 pt-6 min-h-screen">
+			<div className="wrapper space-y-8">
 				<BackButton />
 
 				{/* Top Hero Grid */}
@@ -164,7 +165,7 @@ async function ProductContent({
 										<Badge
 											key={tag}
 											variant="secondary"
-											className="text-xs"
+											className="text-xs lowercase"
 										>
 											{tag}
 										</Badge>
@@ -192,19 +193,7 @@ async function ProductContent({
 								{[
 									{
 										label: "Launched on :",
-										value: new Intl.DateTimeFormat(
-											"en-US",
-											{
-												year: "numeric",
-												month: "short",
-												day: "2-digit",
-											},
-										).format(
-											new Date(
-												product.createdAt?.toISOString() ??
-												"",
-											),
-										),
+										value: formatDate(product.createdAt),
 									},
 									{
 										label: "Submitted by :",

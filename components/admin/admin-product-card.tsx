@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { ProductType } from "@/types";
 import { Tractor } from "lucide-react";
 import Link from "next/link";
@@ -36,7 +36,11 @@ export default function AdminProductCard({
 						{product.tagline}
 						<div className="flex items-center gap-2">
 							{product.tags?.map((tag) => (
-								<Badge variant="secondary" key={tag}>
+								<Badge
+									variant="secondary"
+									className="lowercase"
+									key={tag}
+								>
 									{tag}
 								</Badge>
 							))}
@@ -46,20 +50,7 @@ export default function AdminProductCard({
 								<span className="font-bold">By:</span>{" "}
 								{product.submittedBy}
 							</p>
-							<p>
-								{product.createdAt
-									? new Intl.DateTimeFormat("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										}).format(
-											new Date(
-												product.createdAt?.toISOString() ??
-													"",
-											),
-										)
-									: ""}
-							</p>
+							<p>{formatDate(product.createdAt)}</p>
 							<p>
 								<Link
 									href={product.websiteUrl ?? ""}

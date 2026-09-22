@@ -54,10 +54,13 @@ export default function DiscussionSection({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
-						<h3 className="text-xl font-bold">Community Discussion</h3>
+						<h3 className="text-xl font-bold">
+							Community Discussion
+						</h3>
 					</div>
 					<p className="text-xs text-muted-foreground">
-						Ask questions, report bugs, suggest features, or chat with the maker and community.
+						Ask questions, report bugs, suggest features, or chat
+						with the maker and community.
 					</p>
 				</div>
 
@@ -69,7 +72,8 @@ export default function DiscussionSection({
 						const count =
 							cat.id === "all"
 								? comments.length
-								: comments.filter((c) => c.category === cat.id).length;
+								: comments.filter((c) => c.category === cat.id)
+										.length;
 
 						return (
 							<button
@@ -107,7 +111,7 @@ export default function DiscussionSection({
 			{isSignedIn ? (
 				<CommentForm
 					productId={productId}
-					onSuccess={() => { }}
+					onSuccess={() => {}}
 					placeholder={
 						isMaker
 							? "Share a note or answer community questions as the maker..."
@@ -117,7 +121,8 @@ export default function DiscussionSection({
 			) : (
 				<div className="rounded-lg border border-dashed p-6 text-center bg-muted/20">
 					<p className="text-sm text-muted-foreground mb-3">
-						Sign in to ask questions, share feedback, report bugs, or participate in the discussion.
+						Sign in to ask questions, share feedback, report bugs,
+						or participate in the discussion.
 					</p>
 					<Button asChild size="sm">
 						<a href="/sign-in">Sign In to Join Discussion</a>
@@ -202,26 +207,28 @@ function CommentForm({
 		>
 			{!parentId && (
 				<div className="flex flex-wrap items-center gap-2 pb-2 border-b">
-					{DISCUSSION_CATEGORIES.filter((c) => c.id !== "all").map((t) => {
-						const isSelected = category === t.id;
-						const Icon = t.icon;
-						return (
-							<button
-								key={t.id}
-								type="button"
-								onClick={() => setCategory(t.id)}
-								className={cn(
-									"flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer transition-colors",
-									isSelected
-										? "bg-primary text-primary-foreground font-semibold"
-										: "bg-muted text-muted-foreground hover:text-foreground",
-								)}
-							>
-								<Icon className="size-3" />
-								<span>{t.label}</span>
-							</button>
-						);
-					})}
+					{DISCUSSION_CATEGORIES.filter((c) => c.id !== "all").map(
+						(t) => {
+							const isSelected = category === t.id;
+							const Icon = t.icon;
+							return (
+								<button
+									key={t.id}
+									type="button"
+									onClick={() => setCategory(t.id)}
+									className={cn(
+										"flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer transition-colors",
+										isSelected
+											? "bg-primary text-primary-foreground font-semibold"
+											: "bg-muted text-muted-foreground hover:text-foreground",
+									)}
+								>
+									<Icon className="size-3" />
+									<span>{t.label}</span>
+								</button>
+							);
+						},
+					)}
 				</div>
 			)}
 
@@ -308,7 +315,6 @@ function CommentItem({
 	);
 	const [isPendingVote, startTransition] = useTransition();
 	const [isCollapsed, setIsCollapsed] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
 	const isMakerComment = comment.userRole === "maker";
@@ -320,24 +326,26 @@ function CommentItem({
 		startTransition(async () => {
 			const nextState = !hasUpvoted;
 			setHasUpvoted(nextState);
-			setUpvotes((prev) => (nextState ? prev + 1 : Math.max(0, prev - 1)));
+			setUpvotes((prev) =>
+				nextState ? prev + 1 : Math.max(0, prev - 1),
+			);
 			await upvoteCommentAction(comment.id);
 		});
 	};
 
 	const handleDelete = async () => {
 		try {
-			setIsDeleting(true);
 			await deleteCommentAction(comment.id);
 			setDeleteDialogOpen(false);
 		} catch (error) {
 			console.error("Failed to delete comment:", error);
 		} finally {
-			setIsDeleting(false);
 		}
 	};
 
-	const categoryConfig = DISCUSSION_CATEGORIES.find((c) => c.id === comment.category);
+	const categoryConfig = DISCUSSION_CATEGORIES.find(
+		(c) => c.id === comment.category,
+	);
 
 	return (
 		<div
@@ -376,19 +384,20 @@ function CommentItem({
 						</div>
 						<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
 							<span>{formatTimeAgo(comment.createdAt)}</span>
-							{categoryConfig && categoryConfig.id !== "general" && (
-								<>
-									<span>•</span>
-									<span
-										className={cn(
-											"px-1.5 py-0.2 rounded font-medium",
-											categoryConfig.color,
-										)}
-									>
-										{categoryConfig.label}
-									</span>
-								</>
-							)}
+							{categoryConfig &&
+								categoryConfig.id !== "general" && (
+									<>
+										<span>•</span>
+										<span
+											className={cn(
+												"px-1.5 py-0.2 rounded font-medium",
+												categoryConfig.color,
+											)}
+										>
+											{categoryConfig.label}
+										</span>
+									</>
+								)}
 						</div>
 					</div>
 				</div>

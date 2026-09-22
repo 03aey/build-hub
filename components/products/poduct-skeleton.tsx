@@ -2,7 +2,7 @@ import { Skeleton } from "../ui/skeleton";
 
 export function ProductDetailSkeleton() {
 	return (
-		<div className="py-12 min-h-screen">
+		<div className="pb-12 pt-6 min-h-screen">
 			<div className="wrapper space-y-8">
 				<Skeleton className="h-9 w-32 rounded-md" />
 

@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Cctv, FileQuestionMark } from "lucide-react";
+import { FileQuestionMark } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,27 +18,26 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
 	return (
-		<div className="py-20 pt-10">
+		<div className="pb-20 pt-4">
 			<div className="wrapper">
-				<div className="mb-12">
+				<div className="mb-8">
 					<SectionHeader
 						title="Contact Us"
-						icon={Cctv}
 						description="Have questions, feedback, or want to contribute? We're here to help and would love to hear from you."
 					/>
 				</div>
 
-				<div className="mb-12 max-w-3xl mx-auto">
+				<div className="mb-8 max-w-3xl mx-auto">
 					<ContactForm />
 				</div>
-				<div className="mb-6">
+				<div className="mb-4">
 					<SectionHeader
 						title="FAQ"
 						icon={FileQuestionMark}
-						description="Have any questions? We've got you covered!"
+						description="Have any questions? We've got you covered."
 					/>
 				</div>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<Card>
 						<CardHeader>
 							<CardTitle className="text-lg">

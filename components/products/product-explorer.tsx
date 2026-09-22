@@ -98,7 +98,7 @@ export default function ProductExplorer({
 
 	return (
 		<div>
-			<div className="flex flex-col sm:flex-row gap-4 mb-8">
+			<div className="flex flex-col sm:flex-row gap-4 mb-4">
 				<div className="flex-1 relative">
 					<BookSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
 					<Input

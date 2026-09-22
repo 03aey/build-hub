@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { addProductAction } from "@/lib/products/product-actions";
 import { FormState } from "@/types";
-import { AlertCircle, CheckCheck, CheckCircle2, CircleCheckBig, Loader2Icon, PlusCircle, SendHorizonal, SquareCheck, Trophy } from "lucide-react";
+import {
+	AlertCircle,
+	CircleCheckBig,
+	Loader2Icon,
+	PlusCircle,
+	SendHorizonal,
+} from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 

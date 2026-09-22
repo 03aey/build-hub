@@ -17,7 +17,7 @@ export default async function FeaturedProducts() {
 	return (
 		<section className="py-20 bg-muted/20" id="trending">
 			<div className="wrapper">
-				<div className="flex items-center justify-between mb-8">
+				<div className="flex items-center justify-between mb-6">
 					<SectionHeader
 						title="Featured Today"
 						icon={Birdhouse}

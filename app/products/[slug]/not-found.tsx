@@ -1,4 +1,3 @@
-import BackButton from "@/components/back-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,40 +29,48 @@ export default function ProductNotFound() {
 
 					{/* Center Visual & Title */}
 					<div className="space-y-4 max-w-xl mx-auto">
-						{/* <div className="relative inline-flex items-center justify-center">
-							<div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl transform scale-150 -z-10" />
-							<div className="size-20 rounded-2xl border border-border/80 bg-card/80 backdrop-blur-md flex items-center justify-center shadow-lg">
-							</div>
-						</div> */}
-						{/* <PackageSearch className="size-10 text-primary animate-pulse mx-auto" /> */}
-
 						<h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
 							Looking for a Project?
 						</h1>
 
 						<p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-							We couldn&apos;t find the product you requested. It might have been
-							renamed, unpublished, or the URL slug may contain a typo.
+							We couldn&apos;t find the product you requested. It
+							might have been renamed, unpublished, or the URL
+							slug may contain a typo.
 						</p>
 					</div>
 
 					{/* Action Buttons */}
 					<div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-						<Button asChild size="lg" className="rounded-full gap-2 px-6 shadow-sm">
+						<Button
+							asChild
+							size="lg"
+							className="rounded-full gap-2 px-6 shadow-sm"
+						>
 							<Link href="/explore">
 								<Telescope className="size-4" />
 								Explore All Products
 							</Link>
 						</Button>
 
-						<Button asChild variant="outline" size="lg" className="rounded-full gap-2 px-6">
+						<Button
+							asChild
+							variant="outline"
+							size="lg"
+							className="rounded-full gap-2 px-6"
+						>
 							<Link href="/submit">
 								<PlusCircle className="size-4" />
 								Submit a Product
 							</Link>
 						</Button>
 
-						<Button asChild variant="ghost" size="lg" className="rounded-full gap-2 px-5 text-muted-foreground hover:text-foreground">
+						<Button
+							asChild
+							variant="ghost"
+							size="lg"
+							className="rounded-full gap-2 px-5 text-muted-foreground hover:text-foreground"
+						>
 							<Link href="/">
 								<HousePlug className="size-4" />
 								Home
@@ -90,7 +97,8 @@ export default function ProductNotFound() {
 										Browse Catalog
 									</h3>
 									<p className="text-xs text-muted-foreground line-clamp-2">
-										Search by category, tags, or upvote counts.
+										Search by category, tags, or upvote
+										counts.
 									</p>
 								</div>
 							</Link>
@@ -107,7 +115,8 @@ export default function ProductNotFound() {
 										Launch Yours
 									</h3>
 									<p className="text-xs text-muted-foreground line-clamp-2">
-										Showcase your SaaS, AI tool, or side project.
+										Showcase your SaaS, AI tool, or side
+										project.
 									</p>
 								</div>
 							</Link>
@@ -124,7 +133,8 @@ export default function ProductNotFound() {
 										Need Help?
 									</h3>
 									<p className="text-xs text-muted-foreground line-clamp-2">
-										Reach out if a product link should exist.
+										Reach out if a product link should
+										exist.
 									</p>
 								</div>
 							</Link>
