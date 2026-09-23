@@ -2,8 +2,8 @@
 
 import SectionHeader from "@/components/common/section-header";
 import ProductExplorer from "@/components/products/product-explorer";
+import { ProductsSkeleton } from "@/components/skeleton";
 import { getAllProducts } from "@/lib/products/product-select";
-import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -25,13 +25,7 @@ export default async function ExplorePage() {
 					/>
 				</div>
 
-				<Suspense
-					fallback={
-						<div className="flex items-center justify-center w-full min-h-screen">
-							<Loader2 className="size-5 animate-spin" />
-						</div>
-					}
-				>
+				<Suspense fallback={<ProductsSkeleton count={8} />}>
 					<ProductExplorer products={products} />
 				</Suspense>
 			</div>

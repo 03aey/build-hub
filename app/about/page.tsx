@@ -13,7 +13,7 @@ import {
 	ABOUT_STATS,
 	ABOUT_TECH_STACK,
 } from "@/lib/data/site-data";
-import { CheckCircle2, Compass, Sparkles, Users } from "lucide-react";
+import { CheckCircle2, Sparkles, Terminal, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -229,7 +229,7 @@ export default function AboutPage() {
 								className="rounded-full px-8"
 							>
 								<Link href="/submit">
-									<Sparkles className="size-4 mr-2" />
+									<Sparkles className="size-4 mr-1.5" />
 									Submit Your Project
 								</Link>
 							</Button>
@@ -241,7 +241,7 @@ export default function AboutPage() {
 								className="rounded-full px-8"
 							>
 								<Link href="/explore">
-									<Compass className="size-4 mr-2" />
+									<Terminal className="size-4 mr-1.5" />
 									Explore Directory
 								</Link>
 							</Button>

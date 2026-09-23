@@ -1,7 +1,7 @@
 import EmptyState from "@/components/common/empty-state";
 import SectionHeader from "@/components/common/section-header";
 import ProductCard from "@/components/products/product-card";
-import ProductsSkeleton from "@/components/products/product-skeleton";
+import { ProductsSkeleton } from "@/components/skeleton";
 import { getRecentlyLaunchedProducts } from "@/lib/products/product-select";
 import { RotateCwSquare } from "lucide-react";
 import { Suspense } from "react";

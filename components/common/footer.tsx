@@ -1,5 +1,6 @@
 import { FOOTER_SECTIONS, SOCIAL_LINKS } from "@/lib/data/site-data";
 import Link from "next/link";
+import CurrentYear from "./current-year";
 import { Logo } from "./header";
 
 export default function Footer() {
@@ -36,7 +37,7 @@ export default function Footer() {
 
 				<div className="mt-12 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
 					<p className="text-sm text-muted-foreground">
-						&copy; BuildHub Inc. {new Date().getFullYear()} | All rights reserved.
+						&copy; BuildHub Inc. <CurrentYear /> | All rights reserved.
 					</p>
 
 					<div className="flex items-center gap-4">

@@ -5,7 +5,7 @@ import {
 	HousePlug,
 	Search,
 	SparklesIcon,
-	Telescope,
+	Terminal
 } from "lucide-react";
 import Link from "next/link";
 
@@ -42,7 +42,7 @@ export default function NotFound() {
 				<div className="flex flex-wrap items-center justify-center gap-3 pt-2">
 					<Button asChild size="lg" className="rounded-full gap-2 px-6">
 						<Link href="/explore">
-							<Telescope className="size-4" />
+							<Terminal className="size-4" />
 							Explore Products
 						</Link>
 					</Button>
