@@ -145,3 +145,25 @@ export const productReviews = pgTable(
 	}),
 );
 
+// ---------------- BOOKMARKS & PERSONAL LISTS ----------------
+export const bookmarks = pgTable(
+	"bookmarks",
+	{
+		id: serial("id").primaryKey(),
+		userId: varchar("user_id", { length: 255 }).notNull(),
+		productId: integer("product_id")
+			.notNull()
+			.references(() => products.id, { onDelete: "cascade" }),
+		listName: varchar("list_name", { length: 100 }).notNull().default("Want to Test"),
+		notes: text("notes"),
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+	},
+	(table) => ({
+		userProductIdx: uniqueIndex("bookmarks_user_product_idx").on(
+			table.userId,
+			table.productId,
+		),
+		userIdIdx: index("bookmarks_user_id_idx").on(table.userId),
+	}),
+);
+

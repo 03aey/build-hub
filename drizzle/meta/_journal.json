@@ -29,6 +29,13 @@
       "when": 1775276901331,
       "tag": "0003_bright_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790874984868,
+      "tag": "0004_cool_mojo",
+      "breakpoints": true
     }
   ]
 }
