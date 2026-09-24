@@ -7,7 +7,9 @@ import {
 	NavItemType,
 	SocialLinkType,
 } from "@/types";
+
 import {
+	Bookmark,
 	Bug,
 	ChevronsUp,
 	Code2,
@@ -28,10 +30,11 @@ import {
 	Shield,
 	Star,
 	Telescope,
+	Terminal,
 	Twitter,
 	UserCheck,
 	UsersIcon,
-	Zap,
+	Zap
 } from "lucide-react";
 
 // ==========================================
@@ -68,21 +71,22 @@ export const MAIN_NAV_ITEMS: NavItemType[] = [
 	{
 		label: "Explore",
 		href: "/explore",
-		icon: Telescope,
+		icon: Terminal,
 	},
-	// {
-	// 	label: "About",
-	// 	href: "/about",
-	// 	icon: Compass,
-	// },
+	{
+		label: "Bookmarks",
+		href: "/bookmarks",
+		icon: Bookmark,
+	},
 ];
 
 export const FOOTER_SECTIONS: FooterSectionType[] = [
 	{
 		title: "Product",
 		links: [
-			{ label: "Explore", href: "/explore" },
+			// { label: "Explore", href: "/explore" },
 			{ label: "Trending", href: "/explore?sort=trending" },
+			{ label: "Saved Tools", href: "/bookmarks" },
 			{ label: "Submit Project", href: "/submit" },
 		],
 	},

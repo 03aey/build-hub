@@ -1,5 +1,6 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
+	bookmarks,
 	comments,
 	contactSubmissions,
 	products,
@@ -25,6 +26,7 @@ export type CommentType = InferSelectModel<typeof comments>;
 export type ProductUpdateType = InferSelectModel<typeof productUpdates>;
 export type ProductReviewType = InferSelectModel<typeof productReviews>;
 export type ContactSubmissionType = InferSelectModel<typeof contactSubmissions>;
+export type BookmarkType = InferSelectModel<typeof bookmarks>;
 
 // ==========================================
 // DATABASE INSERT MODELS
@@ -34,6 +36,27 @@ export type NewCommentType = InferInsertModel<typeof comments>;
 export type NewProductUpdateType = InferInsertModel<typeof productUpdates>;
 export type NewProductReviewType = InferInsertModel<typeof productReviews>;
 export type NewContactSubmissionType = InferInsertModel<typeof contactSubmissions>;
+export type NewBookmarkType = InferInsertModel<typeof bookmarks>;
+
+export const DEFAULT_BOOKMARK_LISTS = [
+	"Want to Test",
+	"DevTools & Frameworks",
+	"AI & Machine Learning",
+	"Design & UI Inspiration",
+	"Favorites",
+] as const;
+
+// ==========================================
+// BOOKMARK & PERSONAL LIST TYPES
+// ==========================================
+export type BookmarkWithProductType = BookmarkType & {
+	product: ProductType;
+};
+
+export type BookmarkListSummaryType = {
+	name: string;
+	count: number;
+};
 
 // ==========================================
 // COMMUNITY & DISCUSSION TYPES
