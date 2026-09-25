@@ -1,10 +1,12 @@
 import BackButton from "@/components/back-button";
 import SectionHeader from "@/components/common/section-header";
 import CommunityTabs from "@/components/community/community-tabs";
-import { ProductDetailSkeleton } from "@/components/products/poduct-skeleton";
+import BookmarkButton from "@/components/products/bookmark-button";
 import VotingButtons from "@/components/products/voting-buttons";
+import { ProductDetailSkeleton } from "@/components/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { isProductBookmarked } from "@/lib/bookmarks/bookmark-select";
 import {
 	getNestedComments,
 	getProductReviewsWithStats,
@@ -97,11 +99,19 @@ async function ProductContent({
 					product.submittedBy)),
 	);
 
-	// Fetch community data
-	const [comments, updates, reviewData] = await Promise.all([
+	// Fetch community data and bookmark state in parallel
+	const [comments, updates, reviewData, bookmarkInfo] = await Promise.all([
 		getNestedComments(product.id),
 		getProductUpdates(product.id),
 		getProductReviewsWithStats(product.id),
+		userId
+			? isProductBookmarked(userId, product.id)
+			: Promise.resolve<{
+					isBookmarked: boolean;
+					bookmarkId?: number;
+					listName?: string;
+					notes?: string | null;
+				}>({ isBookmarked: false }),
 	]);
 
 	const { name, description, websiteUrl, tags, voteCount, tagline } = product;
@@ -273,21 +283,33 @@ async function ProductContent({
 									</div>
 								</div>
 
-								{websiteUrl && (
-									<Button
-										asChild
+								{/* Bookmark Button */}
+								<div className="pt-2 space-y-4">
+									<BookmarkButton
+										productId={product.id}
+										productName={product.name}
+										initialIsBookmarked={
+											bookmarkInfo.isBookmarked
+										}
+										initialListName={bookmarkInfo.listName}
 										className="w-full rounded-full"
-									>
-										<a
-											href={websiteUrl}
-											target="_blank"
-											rel="noopener noreferrer"
+									/>
+									{websiteUrl && (
+										<Button
+											asChild
+											className="w-full rounded-full"
 										>
-											Visit Website{" "}
-											<FileSymlink className="size-4 ml-1" />
-										</a>
-									</Button>
-								)}
+											<a
+												href={websiteUrl}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												Visit Website{" "}
+												<FileSymlink className="size-4 ml-1" />
+											</a>
+										</Button>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>

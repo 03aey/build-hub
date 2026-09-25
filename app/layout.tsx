@@ -4,6 +4,7 @@ import { Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
+import { Toaster } from "@/components/ui/sonner";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
 					<Header />
 					{children}
 					<Footer />
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>
