@@ -29,15 +29,16 @@ import {
 	HeartHandshake,
 	Loader2,
 	PenSquare,
+	SendHorizonal,
 	Star,
 	ThumbsDown,
 	ThumbsUp,
 	Trash2,
 	User,
 } from "lucide-react";
+import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import EmptyState from "../common/empty-state";
-import Link from "next/link";
 import StarRating from "./star-rating";
 
 interface ReviewsSectionProps {
@@ -624,7 +625,7 @@ function ReviewDialog({
 								</>
 							) : (
 								<>
-									<PenSquare className="size-3.5 mr-1" />
+									<SendHorizonal className="size-3.5 mr-1" />
 									{existingReview
 										? "Update Review"
 										: "Submit Review"}

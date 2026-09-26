@@ -26,7 +26,7 @@ import {
 	Calendar,
 	Loader2,
 	Plus,
-	Send,
+	SendHorizonal,
 	Tag,
 	Trash2,
 } from "lucide-react";
@@ -51,7 +51,8 @@ export default function ChangelogSection({
 		success: false,
 		message: "",
 	});
-	const [selectedCategory, setSelectedCategory] = useState<ChangelogCategoryId>("feature");
+	const [selectedCategory, setSelectedCategory] =
+		useState<ChangelogCategoryId>("feature");
 
 	useEffect(() => {
 		if (state?.success) {
@@ -80,17 +81,23 @@ export default function ChangelogSection({
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
-						<h3 className="text-xl font-bold">Maker Changelog & Milestones</h3>
+						<h3 className="text-xl font-bold">
+							Maker Changelog & Milestones
+						</h3>
 					</div>
 					<p className="text-xs text-muted-foreground">
-						Follow the journey, new features, and development progress of {productName}.
+						Follow the journey, new features, and development
+						progress of {productName}.
 					</p>
 				</div>
 
 				{isMaker && (
 					<Dialog open={isOpen} onOpenChange={setIsOpen}>
 						<DialogTrigger asChild>
-							<Button size="sm" className="gap-2 shrink-0 font-semibold cursor-pointer">
+							<Button
+								size="sm"
+								className="gap-2 shrink-0 font-semibold cursor-pointer"
+							>
 								<Plus className="size-4" />
 								Post New Update
 							</Button>
@@ -101,11 +108,15 @@ export default function ChangelogSection({
 									Post Changelog / Milestone Update
 								</DialogTitle>
 								<DialogDescription>
-									Share a release, progress milestone, or announcement with your community.
+									Share a release, progress milestone, or
+									announcement with your community.
 								</DialogDescription>
 							</DialogHeader>
 
-							<form action={handlePostSubmit} className="space-y-4 pt-2">
+							<form
+								action={handlePostSubmit}
+								className="space-y-4 pt-2"
+							>
 								{state?.message && !state.success && (
 									<div className="p-3 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive flex items-start gap-2 text-xs">
 										<AlertCircle className="size-4 shrink-0 mt-0.5" />
@@ -115,7 +126,10 @@ export default function ChangelogSection({
 
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 									<div className="space-y-1.5">
-										<Label htmlFor="version" className="text-xs font-semibold">
+										<Label
+											htmlFor="version"
+											className="text-xs font-semibold"
+										>
 											Version / Tag (Optional)
 										</Label>
 										<div className="relative">
@@ -128,12 +142,16 @@ export default function ChangelogSection({
 											/>
 										</div>
 										{versionErrors.length > 0 && (
-											<p className="text-xs text-destructive">{versionErrors.join(", ")}</p>
+											<p className="text-xs text-destructive">
+												{versionErrors.join(", ")}
+											</p>
 										)}
 									</div>
 
 									<div className="space-y-1.5">
-										<Label className="text-xs font-semibold">Update Type</Label>
+										<Label className="text-xs font-semibold">
+											Update Type
+										</Label>
 										<div className="grid grid-cols-2 gap-1.5">
 											{(
 												[
@@ -143,14 +161,20 @@ export default function ChangelogSection({
 													"fix",
 												] as const
 											).map((cat) => {
-												const config = CHANGELOG_CATEGORIES[cat];
-												const isSelected = selectedCategory === cat;
+												const config =
+													CHANGELOG_CATEGORIES[cat];
+												const isSelected =
+													selectedCategory === cat;
 												const Icon = config.icon;
 												return (
 													<button
 														key={cat}
 														type="button"
-														onClick={() => setSelectedCategory(cat)}
+														onClick={() =>
+															setSelectedCategory(
+																cat,
+															)
+														}
 														className={cn(
 															"flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer text-left",
 															isSelected
@@ -159,7 +183,9 @@ export default function ChangelogSection({
 														)}
 													>
 														<Icon className="size-3 shrink-0" />
-														<span className="truncate">{config.label}</span>
+														<span className="truncate">
+															{config.label}
+														</span>
 													</button>
 												);
 											})}
@@ -168,27 +194,45 @@ export default function ChangelogSection({
 								</div>
 
 								<div className="space-y-1.5">
-									<Label htmlFor="title" className="text-xs font-semibold">
-										Update Headline <span className="text-destructive">*</span>
+									<Label
+										htmlFor="title"
+										className="text-xs font-semibold"
+									>
+										Update Headline{" "}
+										<span className="text-destructive">
+											*
+										</span>
 									</Label>
 									<Input
 										id="title"
 										name="title"
 										placeholder="e.g. Added real-time collaboration and dark mode"
 										required
-										className={cn("text-sm", titleErrors.length > 0 && "border-destructive")}
+										className={cn(
+											"text-sm",
+											titleErrors.length > 0 &&
+												"border-destructive",
+										)}
 									/>
 									{titleErrors.length > 0 && (
 										<div className="flex items-center gap-1 text-xs text-destructive">
 											<AlertCircle className="size-3" />
-											<span>{titleErrors.join(", ")}</span>
+											<span>
+												{titleErrors.join(", ")}
+											</span>
 										</div>
 									)}
 								</div>
 
 								<div className="space-y-1.5">
-									<Label htmlFor="content" className="text-xs font-semibold">
-										Changelog Details / Description <span className="text-destructive">*</span>
+									<Label
+										htmlFor="content"
+										className="text-xs font-semibold"
+									>
+										Changelog Details / Description{" "}
+										<span className="text-destructive">
+											*
+										</span>
 									</Label>
 									<Textarea
 										id="content"
@@ -196,12 +240,18 @@ export default function ChangelogSection({
 										placeholder="Describe the changes, what's new, metrics achieved, or fixes deployed..."
 										rows={4}
 										required
-										className={cn("resize-none text-sm", contentErrors.length > 0 && "border-destructive")}
+										className={cn(
+											"resize-none text-sm",
+											contentErrors.length > 0 &&
+												"border-destructive",
+										)}
 									/>
 									{contentErrors.length > 0 && (
 										<div className="flex items-center gap-1 text-xs text-destructive">
 											<AlertCircle className="size-3" />
-											<span>{contentErrors.join(", ")}</span>
+											<span>
+												{contentErrors.join(", ")}
+											</span>
 										</div>
 									)}
 								</div>
@@ -215,15 +265,19 @@ export default function ChangelogSection({
 									>
 										Cancel
 									</Button>
-									<Button type="submit" disabled={isPending} className="gap-1.5">
+									<Button
+										type="submit"
+										disabled={isPending}
+										className="gap-1.5"
+									>
 										{isPending ? (
 											<>
-												<Loader2 className="size-4 animate-spin" />
+												<Loader2 className="size-4 animate-spin mr-1" />
 												Publishing...
 											</>
 										) : (
 											<>
-												<Send className="size-4" />
+												<SendHorizonal className="size-4 mr-1" />
 												Publish Update
 											</>
 										)}
@@ -249,8 +303,10 @@ export default function ChangelogSection({
 				<div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-border">
 					{updates.map((update) => {
 						const config =
-							CHANGELOG_CATEGORIES[(update.category as ChangelogCategoryId) ?? "feature"] ??
-							CHANGELOG_CATEGORIES.feature;
+							CHANGELOG_CATEGORIES[
+								(update.category as ChangelogCategoryId) ??
+									"feature"
+							] ?? CHANGELOG_CATEGORIES.feature;
 						const Icon = config.icon;
 
 						return (
@@ -288,14 +344,18 @@ export default function ChangelogSection({
 												<div className="flex items-center gap-1.5">
 													<Calendar className="size-3" />
 													<span className="text-xs text-muted-foreground">
-														{formatUpdateDate(update.createdAt)}
+														{formatUpdateDate(
+															update.createdAt,
+														)}
 													</span>
 												</div>
 											</div>
 										</div>
 
 										{isMaker && (
-											<DeleteUpdateButton updateId={update.id} />
+											<DeleteUpdateButton
+												updateId={update.id}
+											/>
 										)}
 									</div>
 

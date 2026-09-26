@@ -18,7 +18,7 @@ import {
 	ChevronDown,
 	CornerDownRight,
 	Loader2,
-	Send,
+	SendHorizonal,
 	Sparkles,
 	ThumbsUp,
 	Trash2,
@@ -197,6 +197,7 @@ function CommentForm({
 		formData.set("category", category);
 		if (parentId) formData.set("parentId", parentId.toString());
 		formData.set("productId", productId.toString());
+		setContent("");
 		formAction(formData);
 	};
 
@@ -280,7 +281,7 @@ function CommentForm({
 							</>
 						) : (
 							<>
-								<Send className="size-3.5 mr-1" />
+								<SendHorizonal className="size-3.5 mr-1" />
 								{parentId ? "Post Reply" : "Post Comment"}
 							</>
 						)}

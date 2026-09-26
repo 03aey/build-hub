@@ -3,10 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProductDetailSkeleton() {
 	return (
-		<div className="pb-12 pt-6 min-h-screen">
+		<div className="pb-12 pt-4 min-h-screen">
 			<div className="wrapper space-y-8">
 				{/* Back button */}
-				<Skeleton className="h-8 w-24 rounded-lg" />
+				{/* <Skeleton className="h-8 w-24 rounded-lg" /> */}
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 					{/* Left Column: Product Info & Details */}

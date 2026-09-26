@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
 	return (
-		<div className="py-20 pt-10">
+		<div className="py-10">
 			<div className="wrapper space-y-8">
 				{/* Hero Section */}
 				<div className="space-y-6 flex flex-col items-center justify-center text-center">

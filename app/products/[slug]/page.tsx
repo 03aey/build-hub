@@ -117,9 +117,9 @@ async function ProductContent({
 	const { name, description, websiteUrl, tags, voteCount, tagline } = product;
 
 	return (
-		<div className="pb-12 pt-6 min-h-screen">
+		<div className="pb-20 pt-4 min-h-screen">
 			<div className="wrapper space-y-8">
-				<BackButton />
+				{/* <BackButton /> */}
 
 				{/* Top Hero Grid */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">

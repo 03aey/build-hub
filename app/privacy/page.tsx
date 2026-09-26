@@ -8,7 +8,7 @@ import {
 	Globe,
 	KeyRound,
 	MessageSquareLock,
-	ShieldCheck
+	ShieldCheck,
 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
 	return (
-		<div className="py-20 pt-4">
+		<div className="pb-20 pt-4">
 			<div className="wrapper space-y-6">
 				{/* Top Header */}
 				<div className="space-y-4">

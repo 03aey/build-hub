@@ -42,9 +42,9 @@ export default async function AdminPage() {
 		(product) => product.status === "rejected",
 	);
 	return (
-		<div className="py-20 pt-10">
+		<div className="pb-20 pt-4">
 			<div className="wrapper">
-				<div className="mb-12">
+				<div className="mb-6">
 					<SectionHeader
 						title="Product Admin"
 						icon={Accessibility}

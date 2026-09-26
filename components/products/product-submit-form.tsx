@@ -149,12 +149,12 @@ export default function ProductSubmitForm() {
 			>
 				{isPending ? (
 					<>
-						<Loader2Icon className="size-4 animate-spin mr-2" />
+						<Loader2Icon className="size-4 animate-spin mr-1.5" />
 						Submitting Product...
 					</>
 				) : (
 					<>
-						<SendHorizonal className="size-4 mr-2" />
+						<SendHorizonal className="size-4 mr-1.5" />
 						Submit Product for Review
 					</>
 				)}
