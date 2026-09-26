@@ -274,3 +274,44 @@ export async function removeBookmarkAction(params: {
 		return { success: false, message: "Failed to remove bookmark." };
 	}
 }
+
+/**
+ * Get bookmark status of a product for the currently authenticated user.
+ */
+export async function getBookmarkStatusAction(productId: number) {
+	try {
+		const { userId } = await auth();
+		if (!userId) {
+			return { isBookmarked: false, listName: "Want to Test", notes: null };
+		}
+
+		const [entry] = await db
+			.select({
+				id: bookmarks.id,
+				listName: bookmarks.listName,
+				notes: bookmarks.notes,
+			})
+			.from(bookmarks)
+			.where(
+				and(
+					eq(bookmarks.userId, userId),
+					eq(bookmarks.productId, productId),
+				),
+			)
+			.limit(1);
+
+		if (!entry) {
+			return { isBookmarked: false, listName: "Want to Test", notes: null };
+		}
+
+		return {
+			isBookmarked: true,
+			bookmarkId: entry.id,
+			listName: entry.listName || "Want to Test",
+			notes: entry.notes,
+		};
+	} catch (error) {
+		console.error("Error in getBookmarkStatusAction:", error);
+		return { isBookmarked: false, listName: "Want to Test", notes: null };
+	}
+}

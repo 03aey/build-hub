@@ -2,6 +2,7 @@
 
 import {
 	directToggleBookmarkAction,
+	getBookmarkStatusAction,
 	saveBookmarkWithListAction,
 } from "@/lib/bookmarks/bookmark-actions";
 import { DEFAULT_BOOKMARK_LISTS } from "@/types";
@@ -19,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import { Bookmark, Check, FolderCheck, Loader2, Trash2 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 interface BookmarkButtonProps {
@@ -51,6 +52,30 @@ export default function BookmarkButton({
 	const [listName, setListName] = useState(initialListName || "Want to Test");
 	const [isListModalOpen, setIsListModalOpen] = useState(false);
 	const [notes, setNotes] = useState("");
+
+	useEffect(() => {
+		if (initialIsBookmarked) {
+			setIsBookmarked(true);
+			if (initialListName) setListName(initialListName);
+		}
+	}, [initialIsBookmarked, initialListName]);
+
+	useEffect(() => {
+		if (!isSignedIn) {
+			setIsBookmarked(false);
+			return;
+		}
+
+		getBookmarkStatusAction(productId).then((status) => {
+			if (status && status.isBookmarked) {
+				setIsBookmarked(true);
+				if (status.listName) setListName(status.listName);
+				if (status.notes) setNotes(status.notes);
+			} else {
+				setIsBookmarked(false);
+			}
+		});
+	}, [productId, isSignedIn]);
 
 	const handleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
